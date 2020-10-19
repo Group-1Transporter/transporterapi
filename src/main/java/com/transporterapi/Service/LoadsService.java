@@ -3,6 +3,8 @@ package com.transporterapi.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.google.api.core.ApiFuture;
@@ -15,19 +17,22 @@ import com.google.firebase.cloud.FirestoreClient;
 import com.transporterapi.bean.Bid;
 import com.transporterapi.bean.Loads;
 import com.transporterapi.bean.User;
+import com.transporterapi.exception.ResourceNotFoundException;
+
+import io.grpc.internal.Http2ClientStreamTransportState;
 
 @Service
 public class LoadsService {
 	public static final String COL_NAME="Loads";
-	public Loads createLoads(Loads loads) {
+	public ResponseEntity<Loads> createLoads(Loads loads) {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		loads.setLeadId(dbFirestore.collection(COL_NAME).document().getId());
 		dbFirestore.collection(COL_NAME).document(loads.getLeadId()).set(loads);
-		return loads;
+		return new ResponseEntity<Loads>(loads,HttpStatus.OK);
 	}
 	
 	
-	public ArrayList<Loads> getAllLoads(String id){
+	public ResponseEntity<ArrayList<Loads>> getAllLoads(String id){
 		ArrayList<Loads>al=new ArrayList<Loads>();
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("userId",id).get();
@@ -41,9 +46,9 @@ public class LoadsService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 		
-		return al;
+		return new ResponseEntity<ArrayList<Loads>>(al,HttpStatus.OK);
 	}
-	public Loads getLoadById(String id) {
+	public ResponseEntity<Loads> getLoadById(String id) {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(id);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
@@ -52,14 +57,14 @@ public class LoadsService {
 			DocumentSnapshot document = future.get();
 			if(document.exists()) {
 				loads=document.toObject(Loads.class);				
-				return loads;
+				return new ResponseEntity<Loads>(loads,HttpStatus.OK);
 			}
 			
         }catch(Exception e) {
         }
-        return null;
+        return new ResourceNotFoundException("user not found with id "+id);
 	}
-	public ArrayList<Loads> getConfirmLoads(String id){
+	public ResponseEntity<ArrayList<Loads>> getConfirmLoads(String id){
 		ArrayList<Loads>al=new ArrayList<Loads>();
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("userId",id).get();
@@ -76,9 +81,9 @@ public class LoadsService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 		
-		return al;
+		return new ResponseEntity<ArrayList<Loads>>(al,HttpStatus.OK);
 	}
-	public ArrayList<Loads> getCompletedLoads(String id){
+	public ResponseEntity<ArrayList<Loads>> getCompletedLoads(String id){
 		ArrayList<Loads>al=new ArrayList<Loads>();
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("userId",id).get();
@@ -95,10 +100,10 @@ public class LoadsService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 		
-		return al;
+		return new ResponseEntity<ArrayList<Loads>>(al,HttpStatus.OK);
 	}
 	
-	public Loads deleteLoadById(String id) {
+	public ResponseEntity<Loads> deleteLoadById(String id) {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference =dbFirestore.collection(COL_NAME).document(id);
 		ApiFuture<DocumentSnapshot> future = documentReference.get();
@@ -108,12 +113,12 @@ public class LoadsService {
 			if(document.exists()) {
 				load=document.toObject(Loads.class);
 				dbFirestore.collection(COL_NAME).document(id).delete();
-				return load;
+				return new ResponseEntity<Loads>(load,HttpStatus.OK);
 			}
 		}catch(Exception e) {
 			
 		}
-		return null;
+		return new ResourceNotFoundException("user not found with id "+id);
 		
 	}
 }

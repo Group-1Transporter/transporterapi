@@ -1,12 +1,12 @@
 package com.transporterapi.bean;
 
 public class Bid {
-	private String bidId,leadId,transporterId,transporterName,amount,remark,lastDate;
+	private String bidId,leadId,transporterId,transporterName,amount,remark,estimatedDate;
 	public Bid() {
 		
 	}
 	public Bid(String bidId, String leadId, String transporterId, String transporterName, String amount, String remark,
-			String lastDate) {
+			String estimatedDate) {
 		super();
 		this.bidId = bidId;
 		this.leadId = leadId;
@@ -14,7 +14,7 @@ public class Bid {
 		this.transporterName = transporterName;
 		this.amount = amount;
 		this.remark = remark;
-		this.lastDate = lastDate;
+		this.estimatedDate = estimatedDate;
 	}
 	public String getBidId() {
 		return bidId;
@@ -53,10 +53,10 @@ public class Bid {
 		this.remark = remark;
 	}
 	public String getLastDate() {
-		return lastDate;
+		return estimatedDate;
 	}
 	public void setLastDate(String lastDate) {
-		this.lastDate = lastDate;
+		this.estimatedDate = estimatedDate;
 	}
 	
 }

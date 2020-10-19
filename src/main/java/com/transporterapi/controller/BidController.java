@@ -3,6 +3,7 @@ package com.transporterapi.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,21 +21,21 @@ public class BidController {
 	BidService bidService;
 	
 	@PostMapping("/bid")
-	public Bid createBid(@RequestBody Bid bid) {
+	public ResponseEntity<Bid> createBid(@RequestBody Bid bid) {
 		return bidService.createBid(bid);
 	}
 	
 	@DeleteMapping("/bid/{bidId}")
-	public Bid deleteBidById(@PathVariable("bidId") String id) {
+	public ResponseEntity<Bid> deleteBidById(@PathVariable("bidId") String id) {
 		return bidService.deleteBidById(id);
 	}
 
 	@GetMapping("/bid/{leadId}")
-	public ArrayList<Bid> getBidById(@PathVariable("leadId") String id) {		
+	public ResponseEntity<ArrayList<Bid>> getBidById(@PathVariable("leadId") String id) {		
 		return bidService.getAllBidsByLeadId(id);
 	}
 	@GetMapping("/all-bid/{transporterId}")
-	public ArrayList<Bid> getAllBids(@PathVariable("transporterId") String id) {		
+	public ResponseEntity<ArrayList<Bid>> getAllBids(@PathVariable("transporterId") String id) {		
 		return bidService.getAllBids(id);
 	}
 }

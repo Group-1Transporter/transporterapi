@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.google.api.core.ApiFuture;
@@ -15,20 +17,21 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
 import com.transporterapi.bean.Bid;
 import com.transporterapi.bean.User;
+import com.transporterapi.exception.ResourceNotFoundException;
 
 @Service
 public class BidService {
 	
 	public static final String COL_NAME="Bids";
 	
-	public Bid createBid(Bid bid) {
+	public ResponseEntity<Bid> createBid(Bid bid) {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		bid.setBidId(dbFirestore.collection(COL_NAME).document().getId());
 		dbFirestore.collection(COL_NAME).document(bid.getBidId()).set(bid);
-		return bid;
+		return new ResponseEntity<Bid>(bid,HttpStatus.OK);
 	}
 	
-	public Bid deleteBidById(String id) {
+	public ResponseEntity<Bid> deleteBidById(String id) {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference =dbFirestore.collection(COL_NAME).document(id);
 		ApiFuture<DocumentSnapshot> future = documentReference.get();
@@ -38,14 +41,14 @@ public class BidService {
 			if(document.exists()) {
 				bid=document.toObject(Bid.class);
 				dbFirestore.collection(COL_NAME).document(id).delete();
-				return bid;
+				return new ResponseEntity<Bid>(bid,HttpStatus.OK);
 			}
 		}catch(Exception e) {
 			
 		}
-		return null;
+		return new ResourceNotFoundException("bid not not found with id "+id);
 	}
-	public ArrayList<Bid> getAllBidsByLeadId(String id){
+	public ResponseEntity<ArrayList<Bid>> getAllBidsByLeadId(String id){
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ArrayList<Bid> al=new ArrayList<Bid>();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("leadId",id).get();
@@ -59,10 +62,10 @@ public class BidService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 		
-		return al;
+		return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
 	}
 
-	public ArrayList<Bid> getAllBids(String id) {
+	public ResponseEntity<ArrayList<Bid>> getAllBids(String id) {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ArrayList<Bid> al=new ArrayList<Bid>();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("transporterId",id).get();
@@ -76,6 +79,6 @@ public class BidService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 		
-		return al;
+		return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
 	}
 }
