@@ -31,7 +31,7 @@ public class BidService {
 		return new ResponseEntity<Bid>(bid,HttpStatus.OK);
 	}
 	
-	public ResponseEntity<Bid> deleteBidById(String id) {
+	public ResponseEntity<Bid> deleteBidById(String id)throws ResourceNotFoundException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference =dbFirestore.collection(COL_NAME).document(id);
 		ApiFuture<DocumentSnapshot> future = documentReference.get();
@@ -46,7 +46,7 @@ public class BidService {
 		}catch(Exception e) {
 			
 		}
-		return new ResourceNotFoundException("bid not not found with id "+id);
+		throw new ResourceNotFoundException("bid not not found with id "+id);
 	}
 	public ResponseEntity<ArrayList<Bid>> getAllBidsByLeadId(String id){
 		Firestore dbFirestore = FirestoreClient.getFirestore();

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.transporterapi.Service.BidService;
 import com.transporterapi.bean.Bid;
+import com.transporterapi.exception.ResourceNotFoundException;
 
 @RestController
 public class BidController {
@@ -26,7 +27,7 @@ public class BidController {
 	}
 	
 	@DeleteMapping("/bid/{bidId}")
-	public ResponseEntity<Bid> deleteBidById(@PathVariable("bidId") String id) {
+	public ResponseEntity<Bid> deleteBidById(@PathVariable("bidId") String id)throws ResourceNotFoundException {
 		return bidService.deleteBidById(id);
 	}
 

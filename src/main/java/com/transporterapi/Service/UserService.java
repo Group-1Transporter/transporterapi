@@ -85,7 +85,7 @@ public class UserService {
 		}        
 		return new ResponseEntity<User>(user,HttpStatus.OK);
 	}
-	public ResponseEntity<User> getUserById(String id) {
+	public ResponseEntity<User> getUserById(String id)throws ResourceNotFoundException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(id);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
@@ -101,9 +101,9 @@ public class UserService {
 			
         }catch(Exception e) {
         }
-        return new ResourceNotFoundException("user not found with id "+id);
+        throw new ResourceNotFoundException("user not found with id "+id);
 	}
-	public ResponseEntity<User> deleteUserById(String id) {
+	public ResponseEntity<User> deleteUserById(String id)throws ResourceNotFoundException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference =dbFirestore.collection(COL_NAME).document(id);
 		ApiFuture<DocumentSnapshot> future = documentReference.get();
@@ -118,7 +118,7 @@ public class UserService {
 		}catch(Exception e) {
 			
 		}
-		return new ResourceNotFoundException("user not found with id "+id);
+		throw new ResourceNotFoundException("user not found with id "+id);
 	}
 	
 	public ResponseEntity<ArrayList<User>> getAllUsers(){

@@ -27,18 +27,18 @@ public class UserController {
 	UserService userService;
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable("id") String id) {
+	public ResponseEntity<User> getUserById(@PathVariable("id") String id)throws ResourceNotFoundException {
 		return userService.getUserById(id);
 	}
 	@PostMapping("/")
 	public ResponseEntity<User> createNewUser(@RequestParam("file") MultipartFile file ,@RequestParam("user") User user)throws ResourceNotFoundException {
 		if(file.isEmpty())
-			return new ResourceNotFoundException("image not found");
+			throw new ResourceNotFoundException("image not found.");
 		return userService.createUser(user,file);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<User> deleteUserById(@PathVariable("id") String id) {
+	public ResponseEntity<User> deleteUserById(@PathVariable("id") String id)throws ResourceNotFoundException {
 		return userService.deleteUserById(id);
 	}
 	

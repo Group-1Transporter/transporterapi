@@ -48,7 +48,7 @@ public class LoadsService {
 		} 		
 		return new ResponseEntity<ArrayList<Loads>>(al,HttpStatus.OK);
 	}
-	public ResponseEntity<Loads> getLoadById(String id) {
+	public ResponseEntity<Loads> getLoadById(String id)throws ResourceNotFoundException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(id);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
@@ -62,7 +62,7 @@ public class LoadsService {
 			
         }catch(Exception e) {
         }
-        return new ResourceNotFoundException("user not found with id "+id);
+        throw new ResourceNotFoundException("load not found with id "+id);
 	}
 	public ResponseEntity<ArrayList<Loads>> getConfirmLoads(String id){
 		ArrayList<Loads>al=new ArrayList<Loads>();
@@ -103,7 +103,7 @@ public class LoadsService {
 		return new ResponseEntity<ArrayList<Loads>>(al,HttpStatus.OK);
 	}
 	
-	public ResponseEntity<Loads> deleteLoadById(String id) {
+	public ResponseEntity<Loads> deleteLoadById(String id)throws ResourceNotFoundException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference =dbFirestore.collection(COL_NAME).document(id);
 		ApiFuture<DocumentSnapshot> future = documentReference.get();
@@ -118,7 +118,7 @@ public class LoadsService {
 		}catch(Exception e) {
 			
 		}
-		return new ResourceNotFoundException("user not found with id "+id);
+		throw new ResourceNotFoundException("load not found with id "+id);
 		
 	}
 }

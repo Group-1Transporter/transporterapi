@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.transporterapi.Service.LoadsService;
 import com.transporterapi.bean.Loads;
+import com.transporterapi.exception.ResourceNotFoundException;
 
 @RestController
 public class LoadsController {
@@ -31,7 +32,7 @@ public class LoadsController {
 	}
 	
 	@GetMapping("/load/{leadId}")
-	public ResponseEntity<Loads> getLoadById(@PathVariable("leadId") String id) {
+	public ResponseEntity<Loads> getLoadById(@PathVariable("leadId") String id)throws ResourceNotFoundException {
 		return loadsService.getLoadById(id);
 	}
 	
@@ -46,7 +47,7 @@ public class LoadsController {
 	}
 	
 	@DeleteMapping("/load/{leadId}")
-	public ResponseEntity<Loads> deleteLoadById(@PathVariable("leadId") String id) {
+	public ResponseEntity<Loads> deleteLoadById(@PathVariable("leadId") String id)throws ResourceNotFoundException {
 		return loadsService.deleteLoadById(id);
 	}
 }
