@@ -32,7 +32,6 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.StorageOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.cloud.StorageClient;
-import com.transporterapi.bean.Bid;
 import com.transporterapi.bean.User;
 import com.transporterapi.exception.ResourceNotFoundException;
 
@@ -40,9 +39,9 @@ import com.transporterapi.exception.ResourceNotFoundException;
 @Service
 public class UserService {
 	public static final String COL_NAME="Users";
-	public ResponseEntity<User> createUser(User user,MultipartFile file) {
+	public User createUser(User user,MultipartFile file) {
 		try {
-		InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("./serviceAccount.json");
+		InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("./serviceAccountKey.json");
    	    Storage storage = (Storage) StorageOptions.newBuilder().setProjectId("transportapi-23367").
   	    		setCredentials(GoogleCredentials.fromStream(serviceAccount)).build().getService();
   
@@ -83,58 +82,51 @@ public class UserService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}        
-		return new ResponseEntity<User>(user,HttpStatus.OK);
+		return user;
 	}
-	public ResponseEntity<User> getUserById(String id)throws ResourceNotFoundException {
+	public User getUserById(String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(id);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
         User user;
         
-        try {
+        
 			DocumentSnapshot document = future.get();
 			if(document.exists()) {
-				user=document.toObject(User.class);
-				
-				return new ResponseEntity<User>(user,HttpStatus.OK);
+				user=document.toObject(User.class);				
+				return user;
 			}
 			
-        }catch(Exception e) {
-        }
+       
         throw new ResourceNotFoundException("user not found with id "+id);
 	}
-	public ResponseEntity<User> deleteUserById(String id)throws ResourceNotFoundException {
+	public User deleteUserById(String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference =dbFirestore.collection(COL_NAME).document(id);
 		ApiFuture<DocumentSnapshot> future = documentReference.get();
 		User user;
-		try {
+		
 			DocumentSnapshot document = future.get();
 			if(document.exists()) {
 				user=document.toObject(User.class);
 				dbFirestore.collection(COL_NAME).document(id).delete();
-				return new ResponseEntity<User>(user,HttpStatus.OK);
+				return user;
 			}
-		}catch(Exception e) {
-			
-		}
+		
 		throw new ResourceNotFoundException("user not found with id "+id);
 	}
 	
-	public ResponseEntity<ArrayList<User>> getAllUsers(){
+	public ArrayList<User> getAllUsers() throws InterruptedException, ExecutionException{
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ArrayList<User> al=new ArrayList<User>();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).get();
 		List<QueryDocumentSnapshot> documents;
-		try {
+		
 			documents = future.get().getDocuments();
 			for (QueryDocumentSnapshot document : documents) {
 				   al.add(document.toObject(User.class));
 				}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 		
-		return new ResponseEntity<ArrayList<User>>(al,HttpStatus.OK);
+				
+		return al;
 	}
 }

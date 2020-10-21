@@ -52,11 +52,10 @@ public class Bid {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	public String getLastDate() {
+	public String getEstimatedDate() {
 		return estimatedDate;
 	}
-	public void setLastDate(String lastDate) {
+	public void setEstimatedDate(String estimatedDate) {
 		this.estimatedDate = estimatedDate;
-	}
-	
+	}	
 }

@@ -2,6 +2,7 @@ package com.transporterapi.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,111 +15,97 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
-import com.transporterapi.bean.Bid;
-import com.transporterapi.bean.Loads;
+import com.transporterapi.bean.Leads;
 import com.transporterapi.bean.User;
 import com.transporterapi.exception.ResourceNotFoundException;
 
 import io.grpc.internal.Http2ClientStreamTransportState;
 
 @Service
-public class LoadsService {
-	public static final String COL_NAME="Loads";
-	public ResponseEntity<Loads> createLoads(Loads loads) {
+public class LeadsService {
+	public static final String COL_NAME="Leads";
+	public Leads createLeads(Leads leads) {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
-		loads.setLeadId(dbFirestore.collection(COL_NAME).document().getId());
-		dbFirestore.collection(COL_NAME).document(loads.getLeadId()).set(loads);
-		return new ResponseEntity<Loads>(loads,HttpStatus.OK);
+		dbFirestore.collection(COL_NAME).document(leads.getLeadId()).set(leads);
+		return leads;
 	}
 	
 	
-	public ResponseEntity<ArrayList<Loads>> getAllLoads(String id){
-		ArrayList<Loads>al=new ArrayList<Loads>();
+	public ArrayList<Leads> getAllLeads(String id) throws InterruptedException, ExecutionException{
+		ArrayList<Leads>al=new ArrayList<Leads>();
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("userId",id).get();
 		List<QueryDocumentSnapshot> documents;
-		try {
+		
 			documents = future.get().getDocuments();
 			for (QueryDocumentSnapshot document : documents) {
-				   al.add(document.toObject(Loads.class));
+				   al.add(document.toObject(Leads.class));
 				}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 		
-		return new ResponseEntity<ArrayList<Loads>>(al,HttpStatus.OK);
+				
+		return al;
 	}
-	public ResponseEntity<Loads> getLoadById(String id)throws ResourceNotFoundException {
+	public Leads getLeadById(String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(id);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
-        Loads loads;        
-        try {
+        Leads leads;        
+        
 			DocumentSnapshot document = future.get();
 			if(document.exists()) {
-				loads=document.toObject(Loads.class);				
-				return new ResponseEntity<Loads>(loads,HttpStatus.OK);
+				leads=document.toObject(Leads.class);				
+				return leads;
 			}
 			
-        }catch(Exception e) {
-        }
-        throw new ResourceNotFoundException("load not found with id "+id);
+        
+        throw new ResourceNotFoundException("lead not found with id "+id);
 	}
-	public ResponseEntity<ArrayList<Loads>> getConfirmLoads(String id){
-		ArrayList<Loads>al=new ArrayList<Loads>();
+	public ArrayList<Leads> getConfirmLeads(String id) throws InterruptedException, ExecutionException{
+		ArrayList<Leads>al=new ArrayList<Leads>();
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("userId",id).get();
 		List<QueryDocumentSnapshot> documents;
-		try {
+		
 			documents = future.get().getDocuments();
 			for (QueryDocumentSnapshot document : documents) {
-				   Loads load=document.toObject(Loads.class);
-				   if(!load.getStatus().equalsIgnoreCase("Completed")) {
-					   al.add(load);
+				   Leads lead=document.toObject(Leads.class);
+				   if(!lead.getStatus().equalsIgnoreCase("Completed")) {
+					   al.add(lead);
 				   }
 				}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 		
-		return new ResponseEntity<ArrayList<Loads>>(al,HttpStatus.OK);
+		 		
+		return al;
 	}
-	public ResponseEntity<ArrayList<Loads>> getCompletedLoads(String id){
-		ArrayList<Loads>al=new ArrayList<Loads>();
+	public ArrayList<Leads> getCompletedLeads(String id) throws InterruptedException, ExecutionException{
+		ArrayList<Leads>al=new ArrayList<Leads>();
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("userId",id).get();
 		List<QueryDocumentSnapshot> documents;
-		try {
+		
 			documents = future.get().getDocuments();
 			for (QueryDocumentSnapshot document : documents) {
-				   Loads load=document.toObject(Loads.class);
-				   if(load.getStatus().equalsIgnoreCase("Completed")) {
-					   al.add(load);
+				   Leads lead=document.toObject(Leads.class);
+				   if(lead.getStatus().equalsIgnoreCase("Completed")) {
+					   al.add(lead);
 				   }
 				}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 		
-		return new ResponseEntity<ArrayList<Loads>>(al,HttpStatus.OK);
+				
+		return al;
 	}
 	
-	public ResponseEntity<Loads> deleteLoadById(String id)throws ResourceNotFoundException {
+	public Leads deleteLeadById(String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		DocumentReference documentReference =dbFirestore.collection(COL_NAME).document(id);
 		ApiFuture<DocumentSnapshot> future = documentReference.get();
-		Loads load;
-		try {
+		Leads lead;
+		
 			DocumentSnapshot document = future.get();
 			if(document.exists()) {
-				load=document.toObject(Loads.class);
+				lead=document.toObject(Leads.class);
 				dbFirestore.collection(COL_NAME).document(id).delete();
-				return new ResponseEntity<Loads>(load,HttpStatus.OK);
+				return lead;
 			}
-		}catch(Exception e) {
-			
-		}
-		throw new ResourceNotFoundException("load not found with id "+id);
+		
+		throw new ResourceNotFoundException("lead not found with id "+id);
 		
 	}
 }

@@ -1,11 +1,13 @@
 package com.transporterapi.bean;
 
-public class Loads {
-	private String userId,leadId,typeOfMaterial,weight,pickUpAddress,deliveryAddress,contactForPickup,contactForDelivery,dateOfCompletion,timestamp,status,vehicleNumber,dealLockedWith,bidCount;
-	public Loads() {
+public class Leads {
+	private String userId,leadId,typeOfMaterial,weight,pickUpAddress,
+		deliveryAddress,contactForPickup,contactForDelivery,dateOfCompletion,
+		timestamp,status,vehicleNumber,dealLockedWith,bidCount;
+	public Leads() {
 		
 	}
-	public Loads(String userId, String leadId, String typeOfMaterial, String weight, String pickUpAddress,
+	public Leads(String userId, String leadId, String typeOfMaterial, String weight, String pickUpAddress,
 			String deliveryAddress, String contactForPickup, String contactForDelivery, String dateOfCompletion,
 			String timestamp, String status, String vehicleNumber, String dealLockedWith, String bidCount) {
 		super();

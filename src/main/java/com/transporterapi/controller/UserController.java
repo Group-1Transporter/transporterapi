@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.transporterapi.Service.UserService;
@@ -27,23 +29,29 @@ public class UserController {
 	UserService userService;
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable("id") String id)throws ResourceNotFoundException {
-		return userService.getUserById(id);
+	public ResponseEntity<User> getUserById(@PathVariable("id") String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
+		User user=userService.getUserById(id);
+		return new ResponseEntity<User>(user,HttpStatus.OK);
 	}
 	@PostMapping("/")
-	public ResponseEntity<User> createNewUser(@RequestParam("file") MultipartFile file ,@RequestParam("user") User user)throws ResourceNotFoundException {
+	public ResponseEntity<User> createNewUser(@RequestParam("file") MultipartFile file ,@RequestParam("name")String name,
+			@RequestParam("address")String address,
+			@RequestParam("contactNumber")String contactNumber,@RequestParam("token")String token)throws ResourceNotFoundException {
 		if(file.isEmpty())
 			throw new ResourceNotFoundException("image not found.");
-		return userService.createUser(user,file);
+		 User user=userService.createUser(new User("",name,address,contactNumber,"",token),file);
+		 return new ResponseEntity<User>(user,HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<User> deleteUserById(@PathVariable("id") String id)throws ResourceNotFoundException {
-		return userService.deleteUserById(id);
+	public ResponseEntity<User> deleteUserById(@PathVariable("id") String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
+		User user=userService.deleteUserById(id);
+		return new ResponseEntity<User>(user,HttpStatus.OK) ;
 	}
 	
-	@GetMapping("")
-	public ResponseEntity<ArrayList<User>> getAllUsers(){
-		return userService.getAllUsers();
+	@GetMapping("/")
+	public ResponseEntity<ArrayList<User>> getAllUsers() throws InterruptedException, ExecutionException{
+		ArrayList<User>al=userService.getAllUsers();
+		return new ResponseEntity<ArrayList<User>>(al,HttpStatus.OK);
 	}
 }
