@@ -3,32 +3,27 @@ package com.transporterapi.Service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.services.storage.Storage;
-import com.google.api.services.storage.model.Bucket;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.firestore.Blob;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.cloud.StorageClient;
@@ -42,7 +37,7 @@ public class UserService {
 	public User createUser(User user,MultipartFile file) {
 		try {
 		InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("./serviceAccountKey.json");
-   	    Storage storage = (Storage) StorageOptions.newBuilder().setProjectId("transportapi-23367").
+   	    Storage storage =  StorageOptions.newBuilder().setProjectId("transportapi-23367").
   	    		setCredentials(GoogleCredentials.fromStream(serviceAccount)).build().getService();
   
    	    HashMap<String, String> hm = new HashMap<>();
@@ -63,7 +58,7 @@ public class UserService {
 			
 				fos.write(file.getBytes());
 				fos.close();
-				com.google.cloud.storage.Blob blob = ((com.google.cloud.storage.Storage) storage).create(blobInfo, Files.readAllBytes(convertedFile.toPath()));
+				Blob blob =  storage.create(blobInfo, Files.readAllBytes(convertedFile.toPath()));
 		        
 		        com.google.cloud.storage.Bucket bucket= StorageClient.getInstance().bucket("transportapi-23367.appspot.com");
 		        String location = bucket.getSelfLink();
