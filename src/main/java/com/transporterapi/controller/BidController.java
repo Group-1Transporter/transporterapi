@@ -16,35 +16,39 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.transporterapi.Service.BidService;
 import com.transporterapi.bean.Bid;
-import com.transporterapi.exception.ResourceNotFoundException;
 
+import com.transporterapi.exception.ResourceNotFoundException;
 @RestController
-@RequestMapping("/bid")
+@RequestMapping ("/bid")
 public class BidController {
-	
 	@Autowired
 	BidService bidService;
-	
 	@PostMapping("/")
-	public ResponseEntity<Bid> createBid(@RequestBody Bid bid) throws ResourceNotFoundException, InterruptedException, ExecutionException {
-		bid=bidService.createBid(bid);
-		return new ResponseEntity<Bid>(bid,HttpStatus.OK);
-	}
+	public ResponseEntity<Bid> createBid(@RequestBody Bid bid) throws ResourceNotFoundException, InterruptedException, ExecutionException{
+		if(bid == null) 
+			throw new ResourceNotFoundException("Bid Not found");
+		return new ResponseEntity<Bid>(bidService.createBid(bid),HttpStatus.OK);}
 	
-	@DeleteMapping("/{bidId}")
-	public ResponseEntity<Bid> deleteBidById(@PathVariable("bidId") String id) throws ResourceNotFoundException, InterruptedException, ExecutionException {
-		Bid bid=bidService.deleteBidById(id);
-		return new ResponseEntity<Bid>(bid,HttpStatus.OK);
+	@PostMapping("/update")
+	public ResponseEntity<Bid> updateBid(@RequestBody Bid bid) throws ResourceNotFoundException, InterruptedException, ExecutionException{
+	bid=bidService.updateBid(bid);
+	return new ResponseEntity<Bid>(bid,HttpStatus.OK);}
+		
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Bid> deleteBid(@PathVariable String id) throws ResourceNotFoundException, InterruptedException, ExecutionException{
+		return new ResponseEntity<Bid>(bidService.deleteBid(id),HttpStatus.OK);
 	}
 
 	@GetMapping("/{leadId}")
-	public ResponseEntity<ArrayList<Bid>> getBidById(@PathVariable("leadId") String id) throws InterruptedException, ExecutionException {		
-		ArrayList<Bid>al=bidService.getAllBidsByLeadId(id);
-		return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK) ;
-	}
-	@GetMapping("/all-bid/{transporterId}")
-	public ResponseEntity<ArrayList<Bid>> getAllBids(@PathVariable("transporterId") String id) throws InterruptedException, ExecutionException {	
-		ArrayList<Bid>al=bidService.getAllBids(id);
-		return  new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
-	}
+    public ResponseEntity<?> getAllBidsByLeadId(@PathVariable("leadId")String id) throws InterruptedException, ExecutionException{
+	ArrayList<Bid>al=bidService.getAllBidsByLeadId(id);
+	return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
+    }
+  
+	@GetMapping("/transporter/{transporterId}")
+    public ResponseEntity<?> getAllBidsByTransporterId(@PathVariable("transporterId")String id) throws InterruptedException, ExecutionException{
+	ArrayList<Bid>al=bidService.getAllBidsByTransporterId(id);
+	return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
+   }
+
 }

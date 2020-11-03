@@ -21,11 +21,11 @@ import com.google.firebase.cloud.StorageClient;
 public class FileUtility {
 	public String uploadFile(MultipartFile file) throws IOException {
 		InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("./serviceAccountKey.json");
-		Storage storage = StorageOptions.newBuilder().setProjectId("transportapi-23367")
+		Storage storage = StorageOptions.newBuilder().setProjectId("transporter-vendor")
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount)).build().getService();
 		HashMap<String, String> hm = new HashMap<>();
 		hm.put("firebaseStorageDownloadTokens", "3434434343434dfdf");
-		BlobId blobId = BlobId.of("transportapi-23367.appspot.com", file.getOriginalFilename());
+		BlobId blobId = BlobId.of("transporter-vendor.appspot.com", file.getOriginalFilename());
 		BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("image/jpeg").setMetadata(hm).build();
 		File convertedFile = new File(file.getOriginalFilename());
 		FileOutputStream fos;
@@ -33,7 +33,7 @@ public class FileUtility {
 		fos.write(file.getBytes());
 		fos.close();
 		Blob blob = storage.create(blobInfo, Files.readAllBytes(convertedFile.toPath()));
-		String imageUrl = "https://firebasestorage.googleapis.com/v0/b/transportapi-23367.appspot.com/o/"
+		String imageUrl = "https://firebasestorage.googleapis.com/v0/b/transporter-vendor.appspot.com/o/"
 				+ convertedFile + "?alt=media&token=3434434343434dfdf";
 		return imageUrl;
 	}

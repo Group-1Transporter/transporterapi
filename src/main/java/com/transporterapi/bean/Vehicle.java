@@ -1,14 +1,36 @@
 package com.transporterapi.bean;
 
 public class Vehicle {
-	private String vehicleId,name,count,imageUrl;
+	private String vehicelId;
+	private String name;
+	private int count;
+	private String imgUrl;
 
-	public String getVehicleId() {
-		return vehicleId;
+	public Vehicle(String vehicelId, String name, int count,String imgUrl) {
+		super();
+		this.vehicelId = vehicelId;
+		this.name = name;
+		this.count = count;
+		this.imgUrl = imgUrl;
 	}
 
-	public void setVehicleId(String vehicleId) {
-		this.vehicleId = vehicleId;
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
+	public Vehicle() {
+	}
+
+	public String getVehicelId() {
+		return vehicelId;
+	}
+
+	public void setVehicelId(String vehicelId) {
+		this.vehicelId = vehicelId;
 	}
 
 	public String getName() {
@@ -19,32 +41,12 @@ public class Vehicle {
 		this.name = name;
 	}
 
-	public String getCount() {
+	public int getCount() {
 		return count;
 	}
 
-	public void setCount(String count) {
+	public void setCount(int count) {
 		this.count = count;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
-	public Vehicle(String vehicleId, String name, String count, String imageUrl) {
-		super();
-		this.vehicleId = vehicleId;
-		this.name = name;
-		this.count = count;
-		this.imageUrl = imageUrl;
-	}
-
-	public Vehicle() {
-		super();
-	}
-	
 }

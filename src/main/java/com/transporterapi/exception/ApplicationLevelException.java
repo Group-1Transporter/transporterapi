@@ -11,7 +11,6 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class ApplicationLevelException {
    
-	// hand UserNotFoundException
     @ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> handleUserNotFoundException(ResourceNotFoundException e, WebRequest request){
     	ErrorDetails errorDetails = new ErrorDetails(new Date(),e.getMessage(),request.getDescription(false));

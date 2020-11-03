@@ -18,8 +18,8 @@ public class FirbaseIntialize {
             InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("./serviceAccountKey.json");
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl("https://transportapi-23367.firebaseio.com")
-                    .setStorageBucket("transportapi-23367.appspot.com")
+                    .setDatabaseUrl("https://transporter-vendor.firebaseio.com")
+                    .setStorageBucket("transporter-vendor.appspot.com")
                     .build();
             if(FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);

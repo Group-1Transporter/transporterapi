@@ -1,40 +1,35 @@
 package com.transporterapi.bean;
-
-import java.util.*;
+import java.util.ArrayList;
 
 public class Transporter {
-	private String transporterId,type,name,image,contactNumber,address,aadharCardNumber,gstNo,rating,token;
-	private ArrayList<Vehicle>al;
-	
+	private String transporterId;
+	private String type;
+	private String name;
+	private String imageUrl;
+	private String contactNumber;
+	private String address;
+	private String gstNumber = "";
+	private String rating = "";
+	private String token ;
+	private ArrayList<Vehicle> vehicleList;
 
-	public Transporter(String transporterId, String type, String name, String image, String contactNumber,
-			String address, String aadharCardNumber, String gstNo, String rating, String token, ArrayList<Vehicle> al) {
+	public Transporter() {
+
+	}
+
+	public Transporter(String transporterId, String type, String name, String imageUrl, String contactNumber,
+			String address, String gstNumber, String rating,String token, ArrayList<Vehicle> vehicleList) {
 		super();
 		this.transporterId = transporterId;
 		this.type = type;
 		this.name = name;
-		this.image = image;
+		this.imageUrl = imageUrl;
 		this.contactNumber = contactNumber;
 		this.address = address;
-		this.aadharCardNumber = aadharCardNumber;
-		this.gstNo = gstNo;
+		this.gstNumber = gstNumber;
 		this.rating = rating;
 		this.token = token;
-		this.al = al;
-	}
-
-
-	public Transporter() {
-		super();
-	}
-	
-	
-	public ArrayList<Vehicle> getAl() {
-		return al;
-	}
-
-	public void setAl(ArrayList<Vehicle> al) {
-		this.al = al;
+		this.vehicleList = vehicleList;
 	}
 
 	public String getToken() {
@@ -69,12 +64,12 @@ public class Transporter {
 		this.name = name;
 	}
 
-	public String getImage() {
-		return image;
+	public String getImageUrl() {
+		return imageUrl;
 	}
 
-	public void setImage(String image) {
-		this.image = image;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	public String getContactNumber() {
@@ -93,20 +88,12 @@ public class Transporter {
 		this.address = address;
 	}
 
-	public String getAadharCardNumber() {
-		return aadharCardNumber;
+	public String getGstNumber() {
+		return gstNumber;
 	}
 
-	public void setAadharCardNumber(String aadharCardNumber) {
-		this.aadharCardNumber = aadharCardNumber;
-	}
-
-	public String getGstNo() {
-		return gstNo;
-	}
-
-	public void setGstNo(String gstNo) {
-		this.gstNo = gstNo;
+	public void setGstNumber(String gstNumber) {
+		this.gstNumber = gstNumber;
 	}
 
 	public String getRating() {
@@ -116,5 +103,13 @@ public class Transporter {
 	public void setRating(String rating) {
 		this.rating = rating;
 	}
-	
+
+	public ArrayList<Vehicle> getVehicleList() {
+		return vehicleList;
+	}
+
+	public void setVehicleList(ArrayList<Vehicle> vehicleList) {
+		this.vehicleList = vehicleList;
+	}
+
 }
