@@ -31,7 +31,7 @@ public class BidService {
 		int count =Integer.parseInt(leads.getBidCount());
 		count++;
 		leads.setBidCount(count+"");
-		leadsService.createLeads(leads);
+		leadsService.updateLeads(leads);
 		return bid;
 	}
 	
@@ -50,7 +50,7 @@ public class BidService {
 				int count =Integer.parseInt(leads.getBidCount());
 				count--;
 				leads.setBidCount(count+"");
-				leadsService.createLeads(leads);
+				leadsService.updateLeads(leads);
 				return bid;
 			}
 			else

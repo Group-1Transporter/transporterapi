@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -28,15 +29,33 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable("id") String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
-		User user=userService.getUserById(id);
+	@PostMapping("/update")
+	public ResponseEntity<User> updateUser(@RequestBody User user){
+		user=userService.updateUser(user);
 		return new ResponseEntity<User>(user,HttpStatus.OK);
+	}
+	@PostMapping("/image")
+	public ResponseEntity<User> updateimage(@RequestParam("file")MultipartFile file,@RequestParam("transporterId")String id) throws ResourceNotFoundException, IOException, InterruptedException, ExecutionException{
+		if(file.isEmpty())
+			throw new ResourceNotFoundException("file not found");
+		User user=userService.updateImage(file,id);
+		if(user!=null)
+			return new ResponseEntity<User>(user,HttpStatus.OK);
+		else
+			throw new ResourceNotFoundException("user not found with this id "+id);
+	}
+	@GetMapping("/{id}")
+	public ResponseEntity<User> getUserById(@RequestBody String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
+		User user=userService.getUserById(id);
+		if(user!=null)
+			return new ResponseEntity<User>(user,HttpStatus.OK);
+		else
+			throw new ResourceNotFoundException("user not found with this id "+id);
 	}
 	@PostMapping("/")
 	public ResponseEntity<User> createNewUser(@RequestParam("file") MultipartFile file ,@RequestParam("name")String name,
 			@RequestParam("address")String address,
-			@RequestParam("contactNumber")String contactNumber,@RequestParam("token")String token)throws ResourceNotFoundException {
+			@RequestParam("contactNumber")String contactNumber,@RequestParam("token")String token)throws ResourceNotFoundException, IOException {
 		if(file.isEmpty())
 			throw new ResourceNotFoundException("image not found.");
 		 User user=userService.createUser(new User("",name,address,contactNumber,"",token),file);
@@ -44,9 +63,12 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<User> deleteUserById(@PathVariable("id") String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
+	public ResponseEntity<User> deleteUserById(@RequestBody String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
 		User user=userService.deleteUserById(id);
-		return new ResponseEntity<User>(user,HttpStatus.OK) ;
+		if(user!=null)
+			return new ResponseEntity<User>(user,HttpStatus.OK) ;
+		else
+			throw new ResourceNotFoundException("User not found with id "+id);
 	}
 	
 	@GetMapping("/")

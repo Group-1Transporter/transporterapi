@@ -30,8 +30,14 @@ public class LeadsController {
 	@PostMapping("/create")
 	public ResponseEntity<Leads> createLeads(@RequestBody Leads leads) {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
-		leads.setLeadId(dbFirestore.collection("Leads").document().getId());
 		leads=leadsService.createLeads(leads);
+		return new ResponseEntity<Leads>(leads,HttpStatus.OK);
+	}
+	
+	@PostMapping("/update")
+	public ResponseEntity<Leads> updateLeads(@RequestBody Leads leads) {
+		Firestore dbFirestore = FirestoreClient.getFirestore();
+		leads=leadsService.updateLeads(leads);
 		return new ResponseEntity<Leads>(leads,HttpStatus.OK);
 	}
 	
@@ -44,7 +50,10 @@ public class LeadsController {
 	@GetMapping("/{leadId}")
 	public ResponseEntity<Leads> getLeadById(@PathVariable("leadId") String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
 		Leads lead=leadsService.getLeadById(id);
-		return new ResponseEntity<Leads>(lead,HttpStatus.OK);
+		if(lead!=null)
+			return new ResponseEntity<Leads>(lead,HttpStatus.OK);
+		else
+			throw new ResourceNotFoundException("lead not found with id "+id);
 	}
 	
 	@GetMapping("/confirm-lead/{userId}")
@@ -62,6 +71,9 @@ public class LeadsController {
 	@DeleteMapping("/{leadId}")
 	public ResponseEntity<Leads> deleteLeadById(@PathVariable("leadId") String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
 		Leads lead= leadsService.deleteLeadById(id);
-		return new ResponseEntity<Leads>(lead,HttpStatus.OK) ;
+		if(lead!=null)
+			return new ResponseEntity<Leads>(lead,HttpStatus.OK);
+		else
+			throw new ResourceNotFoundException("lead not found with id "+id);
 	}
 }

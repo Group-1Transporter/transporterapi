@@ -24,7 +24,15 @@ import io.grpc.internal.Http2ClientStreamTransportState;
 @Service
 public class LeadsService {
 	public static final String COL_NAME="Leads";
+	
 	public Leads createLeads(Leads leads) {
+		Firestore dbFirestore = FirestoreClient.getFirestore();
+		leads.setLeadId(dbFirestore.collection("Leads").document().getId());
+		dbFirestore.collection(COL_NAME).document(leads.getLeadId()).set(leads);
+		return leads;
+	}
+	
+	public Leads updateLeads(Leads leads) {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		dbFirestore.collection(COL_NAME).document(leads.getLeadId()).set(leads);
 		return leads;
@@ -44,20 +52,10 @@ public class LeadsService {
 				
 		return al;
 	}
-	public Leads getLeadById(String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
-		Firestore dbFirestore = FirestoreClient.getFirestore();
-		DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(id);
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
-        Leads leads;        
-        
-			DocumentSnapshot document = future.get();
-			if(document.exists()) {
-				leads=document.toObject(Leads.class);				
-				return leads;
-			}
-			
-        
-        throw new ResourceNotFoundException("lead not found with id "+id);
+	public Leads getLeadById(String id) throws InterruptedException, ExecutionException{
+		Firestore dbFirestore = FirestoreClient.getFirestore();		
+		Leads leads=dbFirestore.collection(COL_NAME).document(id).get().get().toObject(Leads.class);       
+        return leads;
 	}
 	public ArrayList<Leads> getConfirmLeads(String id) throws InterruptedException, ExecutionException{
 		ArrayList<Leads>al=new ArrayList<Leads>();
@@ -92,20 +90,10 @@ public class LeadsService {
 		return al;
 	}
 	
-	public Leads deleteLeadById(String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
+	public Leads deleteLeadById(String id)throws InterruptedException, ExecutionException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
-		DocumentReference documentReference =dbFirestore.collection(COL_NAME).document(id);
-		ApiFuture<DocumentSnapshot> future = documentReference.get();
-		Leads lead;
-		
-			DocumentSnapshot document = future.get();
-			if(document.exists()) {
-				lead=document.toObject(Leads.class);
-				dbFirestore.collection(COL_NAME).document(id).delete();
-				return lead;
-			}
-		
-		throw new ResourceNotFoundException("lead not found with id "+id);
-		
-	}
+		Leads leads=dbFirestore.collection(COL_NAME).document(id).get().get().toObject(Leads.class);       
+		dbFirestore.collection(COL_NAME).document(id).delete();
+        return leads;		
+	}	
 }
