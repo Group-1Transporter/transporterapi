@@ -3,10 +3,10 @@ package com.transporterapi.bean;
 public class Vehicle {
 	private String vehicelId;
 	private String name;
-	private int count;
+	private String count;
 	private String imgUrl;
 
-	public Vehicle(String vehicelId, String name, int count,String imgUrl) {
+	public Vehicle(String vehicelId, String name, String count,String imgUrl) {
 		super();
 		this.vehicelId = vehicelId;
 		this.name = name;
@@ -41,11 +41,11 @@ public class Vehicle {
 		this.name = name;
 	}
 
-	public int getCount() {
+	public String getCount() {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(String count) {
 		this.count = count;
 	}
 

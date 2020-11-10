@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.transporterapi.Service.BidService;
 import com.transporterapi.bean.Bid;
-
+import com.transporterapi.bean.BidWithLead;
 import com.transporterapi.exception.ResourceNotFoundException;
 @RestController
 @RequestMapping ("/bid")
@@ -50,5 +50,13 @@ public class BidController {
 	ArrayList<Bid>al=bidService.getAllBidsByTransporterId(id);
 	return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
    }
+	@GetMapping("/bid-lead/{id}")
+	public ResponseEntity<ArrayList<BidWithLead>> getBidwithLead(@PathVariable("id")String id) throws InterruptedException, ExecutionException, ResourceNotFoundException{
+		ArrayList<BidWithLead> al=bidService.getbidWithLead(id);
+		if(al!=null)
+			return new ResponseEntity<ArrayList<BidWithLead>>(al,HttpStatus.OK);
+		else
+			throw new ResourceNotFoundException("Bid not found with id "+id);
+	}
 
 }

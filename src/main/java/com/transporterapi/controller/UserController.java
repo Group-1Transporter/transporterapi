@@ -45,7 +45,7 @@ public class UserController {
 			throw new ResourceNotFoundException("user not found with this id "+id);
 	}
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getUserById(@RequestBody String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
+	public ResponseEntity<User> getUserById(@PathVariable("id") String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
 		User user=userService.getUserById(id);
 		if(user!=null)
 			return new ResponseEntity<User>(user,HttpStatus.OK);

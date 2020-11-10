@@ -27,15 +27,16 @@ public class VehicleController {
 	
 	@PostMapping("/")
 	public ResponseEntity<Vehicle> createVehicle(@RequestParam("name")String name,
-			@RequestParam("count")int count,
-			@RequestParam("transporterId")String id,
+			@RequestParam("count")String count,
+			@RequestParam("transporterId")String transporterId,
 			@RequestParam("file")MultipartFile file) throws ResourceNotFoundException, IOException, InterruptedException, ExecutionException{
 		if(file.isEmpty())
 			throw new ResourceNotFoundException("image not found");
+		
 		Vehicle vehicle = new  Vehicle();
 		vehicle.setName(name);
 		vehicle.setCount(count);
-		return new ResponseEntity<>(vehicleService.createVehicle(vehicle, id,file),HttpStatus.OK);
+		return new ResponseEntity<>(vehicleService.createVehicle(vehicle, transporterId,file),HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}/{transporterId}")

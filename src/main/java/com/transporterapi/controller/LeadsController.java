@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import com.transporterapi.Service.LeadsService;
+import com.transporterapi.bean.BidWithLead;
 import com.transporterapi.bean.Leads;
 import com.transporterapi.exception.ResourceNotFoundException;
 
@@ -76,4 +77,30 @@ public class LeadsController {
 		else
 			throw new ResourceNotFoundException("lead not found with id "+id);
 	}
+	@GetMapping("/transporter/current-lead/{id}")
+	public ResponseEntity<ArrayList<BidWithLead>> getCurrentLeadsbyTransporterId(@PathVariable("id") String id) throws InterruptedException, ExecutionException {
+		ArrayList<BidWithLead>al=leadsService.getCurrentLeadsbyTransporterId(id);
+		return new ResponseEntity<ArrayList<BidWithLead>>(al,HttpStatus.OK);
+	}
+	@GetMapping("/transporter/completed-lead/{id}")
+	public ResponseEntity<ArrayList<BidWithLead>> getCompletedLeadsbyTransporterId(@PathVariable("id") String id) throws InterruptedException, ExecutionException {
+		ArrayList<BidWithLead>al=leadsService.getCompletedLeadsbyTransporterId(id);
+		return new ResponseEntity<ArrayList<BidWithLead>>(al,HttpStatus.OK);
+	}
+	@GetMapping("/all-lead")
+	public ResponseEntity<ArrayList<Leads>> getAllLeads() throws InterruptedException, ExecutionException{
+		ArrayList<Leads>al=leadsService.getAllLeads();
+		return new ResponseEntity<ArrayList<Leads>>(al,HttpStatus.OK);
+	}
+	@GetMapping("/transporter/lead-id/{id}")
+	public ResponseEntity<ArrayList<String>> getCurrentLeadsIdByTransporterId(@PathVariable("id") String id) throws InterruptedException, ExecutionException {
+		ArrayList<String>al=leadsService.getCurrentLeadsIdByTransporterId(id);
+		return new ResponseEntity<ArrayList<String>>(al,HttpStatus.OK);
+	}
+	@GetMapping("/transporter/current-lead/filter/{state}")
+	public ResponseEntity<ArrayList<Leads>> getCurrentLeadsbyFilter(@PathVariable("state") String state) throws InterruptedException, ExecutionException {
+		ArrayList<Leads>al=leadsService.getCurrentLeadsbyFilter(state);
+		return new ResponseEntity<ArrayList<Leads>>(al,HttpStatus.OK);
+	}
+	
 }

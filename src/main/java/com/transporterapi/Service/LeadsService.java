@@ -15,6 +15,8 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
+import com.transporterapi.bean.Bid;
+import com.transporterapi.bean.BidWithLead;
 import com.transporterapi.bean.Leads;
 import com.transporterapi.bean.User;
 import com.transporterapi.exception.ResourceNotFoundException;
@@ -96,4 +98,81 @@ public class LeadsService {
 		dbFirestore.collection(COL_NAME).document(id).delete();
         return leads;		
 	}	
+	
+	public ArrayList<BidWithLead> getCurrentLeadsbyTransporterId(String id) throws InterruptedException, ExecutionException {
+		ArrayList<BidWithLead>al=new ArrayList<BidWithLead>();
+		Firestore dbFirestore = FirestoreClient.getFirestore();
+		ApiFuture<QuerySnapshot> future=dbFirestore.collection("Bid").whereEqualTo("transporterId",id).get();
+		  List<QueryDocumentSnapshot>documents;
+		  documents = future.get().getDocuments();
+			for (QueryDocumentSnapshot document : documents) {
+				   Bid bid=document.toObject(Bid.class);
+				   Leads lead=getLeadById(bid.getLeadId());
+				   if(!lead.getStatus().equalsIgnoreCase("completed"))
+					   al.add(new BidWithLead(bid,lead));
+				}
+		
+		return al;
+	}
+	
+	public ArrayList<BidWithLead> getCompletedLeadsbyTransporterId(String id) throws InterruptedException, ExecutionException {
+		ArrayList<BidWithLead>al=new ArrayList<BidWithLead>();
+		Firestore dbFirestore = FirestoreClient.getFirestore();
+		ApiFuture<QuerySnapshot> future=dbFirestore.collection("Bid").whereEqualTo("transporterId",id).get();
+		  List<QueryDocumentSnapshot>documents;
+		  documents = future.get().getDocuments();
+			for (QueryDocumentSnapshot document : documents) {
+				   Bid bid=document.toObject(Bid.class);
+				   Leads lead=getLeadById(bid.getLeadId());
+				   if(lead.getStatus().equalsIgnoreCase("completed"))
+					   al.add(new BidWithLead(bid,lead));
+				}
+		
+		return al;
+	}
+
+	public ArrayList<Leads> getAllLeads() throws InterruptedException, ExecutionException {
+			ArrayList<Leads>al=new ArrayList<Leads>();
+			Firestore dbFirestore = FirestoreClient.getFirestore();
+			ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("status", "").get();
+			List<QueryDocumentSnapshot> documents;			
+				documents = future.get().getDocuments();
+				for (QueryDocumentSnapshot document : documents) {
+					   al.add(document.toObject(Leads.class));
+					}					
+			return al;
+		}
+
+	public ArrayList<String> getCurrentLeadsIdByTransporterId(String id) throws InterruptedException, ExecutionException {
+		ArrayList<String>al=new ArrayList<String>();
+		Firestore dbFirestore = FirestoreClient.getFirestore();
+		ApiFuture<QuerySnapshot> future=dbFirestore.collection("Bid").whereEqualTo("transporterId",id).get();
+		  List<QueryDocumentSnapshot>documents;
+		  documents = future.get().getDocuments();
+			for (QueryDocumentSnapshot document : documents) {
+				   Bid bid=document.toObject(Bid.class);
+				   Leads lead=getLeadById(bid.getLeadId());
+				   if(!lead.getStatus().equalsIgnoreCase("completed"))
+					   al.add(lead.getLeadId());
+				}
+		
+		return al;
+	}
+
+	public ArrayList<Leads> getCurrentLeadsbyFilter(String state) throws InterruptedException, ExecutionException{
+		ArrayList<Leads>al=new ArrayList<Leads>();
+		Firestore dbFirestore = FirestoreClient.getFirestore();
+		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("status", "").get();
+		List<QueryDocumentSnapshot> documents;			
+			documents = future.get().getDocuments();
+			for (QueryDocumentSnapshot document : documents) {
+				Leads leads=document.toObject(Leads.class);
+				String []str=leads.getPickUpAddress().split(" ");
+				if(state.equalsIgnoreCase(str[str.length-1]));
+				   al.add(leads);
+				}					
+		return al;
+	}
+	
+	
 }

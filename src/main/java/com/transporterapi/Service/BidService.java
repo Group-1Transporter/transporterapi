@@ -12,6 +12,7 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
 import com.transporterapi.bean.Bid;
+import com.transporterapi.bean.BidWithLead;
 import com.transporterapi.bean.Leads;
 import com.transporterapi.exception.ResourceNotFoundException;
 @Service
@@ -71,5 +72,19 @@ public class BidService {
 				}
 		 return al;
 	  }
+	public ArrayList<BidWithLead> getbidWithLead(String id) throws InterruptedException, ExecutionException {
+		ArrayList<BidWithLead>al =new ArrayList<BidWithLead>();
+		ApiFuture<QuerySnapshot> future=fireStore.collection("Bid").whereEqualTo("transporterId",id).get();
+		  List<QueryDocumentSnapshot>documents;
+		  documents = future.get().getDocuments();
+			for (QueryDocumentSnapshot document : documents) {
+				   Bid bid=document.toObject(Bid.class);
+				   Leads lead=new LeadsService().getLeadById(bid.getLeadId());
+				   al.add(new BidWithLead(bid,lead));
+				}
+		
+		return al;
+	}
+	
     
 }
