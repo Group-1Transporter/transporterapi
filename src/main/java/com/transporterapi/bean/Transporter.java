@@ -11,14 +11,23 @@ public class Transporter {
 	private String gstNumber = "";
 	private String rating = "";
 	private String token ;
+	private String aadharCardNumber;
 	private ArrayList<Vehicle> vehicleList;
 
 	public Transporter() {
 
 	}
 
+	public String getAadharCardNumber() {
+		return aadharCardNumber;
+	}
+
+	public void setAadharCardNumber(String aadharCardNumber) {
+		this.aadharCardNumber = aadharCardNumber;
+	}
+
 	public Transporter(String transporterId, String type, String name, String imageUrl, String contactNumber,
-			String address, String gstNumber, String rating,String token, ArrayList<Vehicle> vehicleList) {
+			String address, String gstNumber, String rating,String token, ArrayList<Vehicle> vehicleList,String aadharCardNumber) {
 		super();
 		this.transporterId = transporterId;
 		this.type = type;
@@ -30,6 +39,7 @@ public class Transporter {
 		this.rating = rating;
 		this.token = token;
 		this.vehicleList = vehicleList;
+		this.aadharCardNumber=aadharCardNumber;
 	}
 
 	public String getToken() {

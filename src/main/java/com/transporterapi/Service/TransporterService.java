@@ -38,13 +38,10 @@ public class TransporterService {
 	}
 	
 	// create new transporter
-	public Transporter createTransporter(Transporter transporter,MultipartFile file) throws IOException {
-			
+	public Transporter createTransporter(Transporter transporter,MultipartFile file) throws IOException {			
 		String imageUrl = new FileUtility().uploadFile(file);
 		transporter.setImageUrl(imageUrl);
-		String id = fireStore.collection(TAG).document().getId();
-		transporter.setTransporterId(id);
-		fireStore.collection(TAG).document(id).set(transporter);
+		fireStore.collection(TAG).document(transporter.getTransporterId()).set(transporter);
 		return transporter;
 	}
 	
