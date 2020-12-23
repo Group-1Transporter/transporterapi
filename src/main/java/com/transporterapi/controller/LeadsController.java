@@ -97,9 +97,9 @@ public class LeadsController {
 		ArrayList<String>al=leadsService.getCurrentLeadsIdByTransporterId(id);
 		return new ResponseEntity<ArrayList<String>>(al,HttpStatus.OK);
 	}
-	@GetMapping("/transporter/current-lead/filter/{state}")
-	public ResponseEntity<ArrayList<Leads>> getCurrentLeadsbyFilter(@PathVariable("state") String state) throws InterruptedException, ExecutionException {
-		ArrayList<Leads>al=leadsService.getCurrentLeadsbyFilter(state);
+	@PostMapping("/transporter/current-lead/filter/")
+	public ResponseEntity<ArrayList<Leads>> getCurrentLeadsbyFilter(@RequestBody ArrayList<String>al1) throws InterruptedException, ExecutionException {
+		ArrayList<Leads>al=leadsService.getCurrentLeadsbyFilter(al1);
 		return new ResponseEntity<ArrayList<Leads>>(al,HttpStatus.OK);
 	}
 	

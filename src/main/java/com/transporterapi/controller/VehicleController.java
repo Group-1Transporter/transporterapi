@@ -10,11 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.transporterapi.bean.Transporter;
 import com.transporterapi.bean.Vehicle;
 import com.transporterapi.exception.ResourceNotFoundException;
 import com.transporterapi.Service.VehicleService;
@@ -26,7 +28,7 @@ public class VehicleController {
 	VehicleService vehicleService;
 	
 	@PostMapping("/")
-	public ResponseEntity<Vehicle> createVehicle(@RequestParam("name")String name,
+	public ResponseEntity<Transporter> createVehicle(@RequestParam("name")String name,
 			@RequestParam("count")String count,
 			@RequestParam("transporterId")String transporterId,
 			@RequestParam("file")MultipartFile file) throws ResourceNotFoundException, IOException, InterruptedException, ExecutionException{
@@ -36,14 +38,37 @@ public class VehicleController {
 		Vehicle vehicle = new  Vehicle();
 		vehicle.setName(name);
 		vehicle.setCount(count);
-		return new ResponseEntity<>(vehicleService.createVehicle(vehicle, transporterId,file),HttpStatus.OK);
+		return new ResponseEntity<Transporter>(vehicleService.createVehicle(vehicle, transporterId,file),HttpStatus.OK);
 	}
 	
+	@PostMapping("/update")
+	public ResponseEntity<Transporter> updateVehicle(@RequestBody Transporter transporter) throws InterruptedException, ExecutionException{
+		transporter=vehicleService.updateVehicle(transporter);
+	
+		return new ResponseEntity<Transporter>(transporter,HttpStatus.OK);
+	}
+	
+	
+	
+	
+	@PostMapping("/update/image")
+	public ResponseEntity<Transporter> updateImage(@RequestParam("file")MultipartFile file,
+			@RequestParam("transporterId")String transporterId,
+			@RequestParam("id")String id
+			) throws IOException, InterruptedException, ExecutionException, ResourceNotFoundException{
+		Transporter transporter=vehicleService.updateImage(file,transporterId,id);
+		if(transporter==null) {
+			throw new ResourceNotFoundException("Transporter not found with id "+transporterId);
+		}
+		return new ResponseEntity<Transporter>(transporter,HttpStatus.OK);
+	}
+	
+	
 	@DeleteMapping("/{id}/{transporterId}")
-	public ResponseEntity<Vehicle> deleteVehicle(@PathVariable String id,
+	public ResponseEntity<Transporter> deleteVehicle(@PathVariable String id,
 			@PathVariable String transporterId) throws InterruptedException, ExecutionException, ResourceNotFoundException {
-		Vehicle vehicle = vehicleService.deleteVehicle(id, transporterId);
-		return new ResponseEntity<Vehicle>(vehicle,org.springframework.http.HttpStatus.OK);
+		Transporter t = vehicleService.deleteVehicle(id, transporterId);
+		return new ResponseEntity<Transporter>(t,HttpStatus.OK);
 	}
 	
 }
