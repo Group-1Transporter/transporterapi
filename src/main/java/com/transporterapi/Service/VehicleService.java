@@ -15,11 +15,10 @@ import com.google.firebase.cloud.FirestoreClient;
 
 @Service
 public class VehicleService {
-
-	Firestore firestore = FirestoreClient.getFirestore();
 	
 	//create new vehicle
 	public Transporter createVehicle(Vehicle vehicle,String transporterId,MultipartFile file) throws IOException, InterruptedException, ExecutionException {
+		Firestore firestore = FirestoreClient.getFirestore();
 		String imgUrl = new FileUtility().uploadFile(file);
 		String vehicelId = firestore.collection("Transporter").document().getId();
 		vehicle.setVehicelId(vehicelId);
@@ -36,7 +35,8 @@ public class VehicleService {
 	
 	//delete vehicle
 	public Transporter deleteVehicle(String vehicleId,String transporterId) throws InterruptedException, ExecutionException {
-			Transporter t = firestore.collection("Transporter").document(transporterId).get().get().toObject(Transporter.class);
+		Firestore firestore = FirestoreClient.getFirestore();	
+		Transporter t = firestore.collection("Transporter").document(transporterId).get().get().toObject(Transporter.class);
 			ArrayList<Vehicle> vehicleList = t.getVehicleList();
 			Vehicle vehicle = null;
 			for(Vehicle v : vehicleList) {
@@ -50,11 +50,13 @@ public class VehicleService {
 	}
 
 	public Transporter updateVehicle(Transporter transporter) throws InterruptedException, ExecutionException {
+		Firestore firestore = FirestoreClient.getFirestore();
 		firestore.collection("Transporter").document(transporter.getTransporterId()).set(transporter);
 		return transporter;
 	}
 
 	public Transporter updateImage(MultipartFile file, String transporterId, String id) throws IOException, InterruptedException, ExecutionException {
+		Firestore firestore = FirestoreClient.getFirestore();
 		String imgUrl = new FileUtility().uploadFile(file);
 		Transporter transporter=firestore.collection("Transporter").document(transporterId).get().get().toObject(Transporter.class);
 		ArrayList<Vehicle>al=transporter.getVehicleList();

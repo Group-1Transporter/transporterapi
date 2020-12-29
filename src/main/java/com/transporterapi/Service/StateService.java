@@ -19,9 +19,9 @@ import com.transporterapi.exception.ResourceNotFoundException;
 @Service
 public class StateService {
 	
-	Firestore fireStore = FirestoreClient.getFirestore();
+	
 	public ArrayList<State> getStateList() throws InterruptedException, ExecutionException {
-		
+		Firestore fireStore = FirestoreClient.getFirestore();
 		ArrayList<State> al = new ArrayList<>();
 		ApiFuture<QuerySnapshot> apiFuture = fireStore.collection("State").get();
 		QuerySnapshot querySnapshot = apiFuture.get();
@@ -34,13 +34,14 @@ public class StateService {
 	}
     
 	public State saveState(State s) throws Exception {
+		Firestore fireStore = FirestoreClient.getFirestore();
 		String stateId=fireStore.collection("State").document().getId().toString();
 	    s.setStateId(stateId);
 		fireStore.collection("State").document(stateId).set(s);
 		return s;
 	}
 	  public State getStateById(String stateId) throws InterruptedException, ExecutionException, ResourceNotFoundException {
-		  
+		  Firestore fireStore = FirestoreClient.getFirestore();
 		  State state = fireStore.collection("State").document(stateId).get().get().toObject(State.class);
 	      if (state!= null) 
 	    	  return state;
