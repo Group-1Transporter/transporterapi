@@ -30,14 +30,12 @@ public class LeadsController {
 	
 	@PostMapping("/create")
 	public ResponseEntity<Leads> createLeads(@RequestBody Leads leads) {
-		Firestore dbFirestore = FirestoreClient.getFirestore();
 		leads=leadsService.createLeads(leads);
 		return new ResponseEntity<Leads>(leads,HttpStatus.OK);
 	}
 	
 	@PostMapping("/update")
 	public ResponseEntity<Leads> updateLeads(@RequestBody Leads leads) {
-		Firestore dbFirestore = FirestoreClient.getFirestore();
 		leads=leadsService.updateLeads(leads);
 		return new ResponseEntity<Leads>(leads,HttpStatus.OK);
 	}
@@ -87,6 +85,8 @@ public class LeadsController {
 		ArrayList<BidWithLead>al=leadsService.getCompletedLeadsbyTransporterId(id);
 		return new ResponseEntity<ArrayList<BidWithLead>>(al,HttpStatus.OK);
 	}
+	
+	
 	@GetMapping("/all-lead")
 	public ResponseEntity<ArrayList<Leads>> getAllLeads() throws InterruptedException, ExecutionException{
 		ArrayList<Leads>al=leadsService.getAllLeads();
