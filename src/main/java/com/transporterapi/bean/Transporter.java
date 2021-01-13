@@ -11,6 +11,7 @@ public class Transporter {
 	private String gstNumber = "";
 	private String rating = "";
 	private String token ;
+	
 	private ArrayList<Vehicle> vehicleList;
 
 	public Transporter() {

@@ -42,12 +42,11 @@ public class UserService {
 		dbFirestore.collection(COL_NAME).document(user.getUserId()).set(user);
 		return user;
 	}
-
+  //remove auto generated userid...
 	public User createUser(User user, MultipartFile file) throws IOException {
 		String imageUrl = new FileUtility().uploadFile(file);
 		user.setImageUrl(imageUrl);
 		Firestore dbFirestore = FirestoreClient.getFirestore();
-		user.setUserId(dbFirestore.collection(COL_NAME).document().getId());
 		dbFirestore.collection(COL_NAME).document(user.getUserId()).set(user);
 		return user;
 	}
