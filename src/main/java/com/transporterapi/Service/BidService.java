@@ -17,8 +17,9 @@ import com.transporterapi.bean.Leads;
 import com.transporterapi.exception.ResourceNotFoundException;
 @Service
 public class BidService {
-	Firestore fireStore=FirestoreClient.getFirestore();
+	
 	public Bid createBid(Bid bid) throws ResourceNotFoundException, InterruptedException, ExecutionException {
+		Firestore fireStore=FirestoreClient.getFirestore();
 	    String bidId = fireStore.collection("Bid").document().getId().toString();	
 	    bid.setBidId(bidId);
 	    fireStore.collection("Bid").document(bidId).set(bid);
@@ -32,11 +33,13 @@ public class BidService {
 		
 	}
 	public Bid updateBid(Bid bid) {
+		Firestore fireStore=FirestoreClient.getFirestore();
 		fireStore.collection("Bid").document(bid.getBidId()).set(bid);
 		return bid;
 	}
 	
 	public Bid deleteBid(String bidId) throws InterruptedException, ExecutionException, ResourceNotFoundException {
+		Firestore fireStore=FirestoreClient.getFirestore();
 		  Bid bid = fireStore.collection("Bid").document(bidId).get().get().toObject(Bid.class);
 	      if(bid!=null) {
 		    fireStore.collection("Bid").document(bidId).delete();
@@ -51,6 +54,7 @@ public class BidService {
 	 }
   
 	public ArrayList<Bid>getAllBidsByLeadId(String id) throws InterruptedException, ExecutionException{
+		Firestore fireStore=FirestoreClient.getFirestore();
 		 ArrayList<Bid>al=new ArrayList<Bid>();
 		 ApiFuture<QuerySnapshot> future=fireStore.collection("Bid").whereEqualTo("leadId",id).get();
 		 List<QueryDocumentSnapshot>documents;
@@ -63,6 +67,7 @@ public class BidService {
    }
   
 	public ArrayList<Bid>getAllBidsByTransporterId(String id) throws InterruptedException, ExecutionException{
+		Firestore fireStore=FirestoreClient.getFirestore();
 		  ArrayList<Bid>al=new ArrayList<Bid>();
 		  ApiFuture<QuerySnapshot> future=fireStore.collection("Bid").whereEqualTo("transporterId",id).get();
 		  List<QueryDocumentSnapshot>documents;
@@ -73,6 +78,7 @@ public class BidService {
 		 return al;
 	  }
 	public ArrayList<BidWithLead> getbidWithLead(String id) throws InterruptedException, ExecutionException {
+		Firestore fireStore=FirestoreClient.getFirestore();
 		ArrayList<BidWithLead>al =new ArrayList<BidWithLead>();
 		ApiFuture<QuerySnapshot> future=fireStore.collection("Bid").whereEqualTo("transporterId",id).get();
 		  List<QueryDocumentSnapshot>documents;

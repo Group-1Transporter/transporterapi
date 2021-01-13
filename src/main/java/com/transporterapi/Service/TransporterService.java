@@ -19,10 +19,10 @@ import com.google.firebase.cloud.FirestoreClient;
 public class TransporterService {
 
 	private static final String TAG = "Transporter";
-	private Firestore fireStore = FirestoreClient.getFirestore();
 	
 	//get all transporter
 	public ArrayList<Transporter> getTransporter() throws InterruptedException, ExecutionException{
+		Firestore fireStore = FirestoreClient.getFirestore();
 		ArrayList<Transporter>transporterList = new ArrayList<Transporter>();
 		List<QueryDocumentSnapshot> list = fireStore.collection(TAG).get().get().getDocuments();	
 		for(QueryDocumentSnapshot queryDocument : list ) {
@@ -34,23 +34,23 @@ public class TransporterService {
 	
 	//get Single Transporter
 	public Transporter getTransporter(String id) throws InterruptedException, ExecutionException {
+		Firestore fireStore = FirestoreClient.getFirestore();
 		Transporter t = fireStore.collection(TAG).document(id).get().get().toObject(Transporter.class);
 		return t;
 	}
 	
 	// create new transporter
-	public Transporter createTransporter(Transporter transporter,MultipartFile file) throws IOException {
-			
+	public Transporter createTransporter(Transporter transporter,MultipartFile file) throws IOException {		
+		Firestore fireStore = FirestoreClient.getFirestore();
 		String imageUrl = new FileUtility().uploadFile(file);
 		transporter.setImageUrl(imageUrl);
-		String id = fireStore.collection(TAG).document().getId();
-		transporter.setTransporterId(id);
-		fireStore.collection(TAG).document(id).set(transporter);
+		fireStore.collection(TAG).document(transporter.getTransporterId()).set(transporter);
 		return transporter;
 	}
 	
 	//delete Transporter by id
 	public Transporter deleteTransporter(String id) throws InterruptedException, ExecutionException {
+		Firestore fireStore = FirestoreClient.getFirestore();
 		Transporter t = fireStore.collection(TAG).document(id).get().get().toObject(Transporter.class);
 		fireStore.collection(TAG).document(id).delete();
 			return t;
@@ -58,12 +58,14 @@ public class TransporterService {
 	
 	//update transporter details without image
 	public Transporter updateTransporter(Transporter transporter) throws InterruptedException, ExecutionException {
+		Firestore fireStore = FirestoreClient.getFirestore();
 		fireStore.collection(TAG).document(transporter.getTransporterId()).set(transporter);
 		return transporter;
 	}
 	
 	//update transporter image only
 	public Transporter updateTransporter(String transporterId,MultipartFile file) throws IOException, InterruptedException, ExecutionException {
+		Firestore fireStore = FirestoreClient.getFirestore();
 		String imageUrl = new FileUtility().uploadFile(file);
 		Transporter t = fireStore.collection(TAG).document(transporterId).get().get().toObject(Transporter.class);
 		t.setImageUrl(imageUrl);

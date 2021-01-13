@@ -39,9 +39,9 @@ public class TransporterController {
 				@RequestParam("address")String address, 
 				@RequestParam("gstNumber")String gstNumber,
 				@RequestParam("rating")String rating,
-				@RequestParam("amount")String amount,
-				@RequestParam("token")String token) throws ResourceNotFoundException, IOException {
-			
+				@RequestParam("token")String token,
+				@RequestParam("aadharCardNumber")String aadharCardNumber,
+				@RequestParam("id")String id) throws ResourceNotFoundException, IOException {
 			if(file.isEmpty())
 				throw new ResourceNotFoundException("image not found.");
 			Transporter transporter = new Transporter();
@@ -54,6 +54,8 @@ public class TransporterController {
 			}
 			transporter.setRating(rating); 
 			transporter.setToken(token);
+			transporter.setTransporterId(id);
+			transporter.setAadharCardNumber(aadharCardNumber);
 			return new ResponseEntity<Transporter>(transporterService.createTransporter(transporter,file),HttpStatus.OK);
 		}
 		

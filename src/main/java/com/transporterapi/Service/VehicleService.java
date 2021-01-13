@@ -15,11 +15,10 @@ import com.google.firebase.cloud.FirestoreClient;
 
 @Service
 public class VehicleService {
-
-	Firestore firestore = FirestoreClient.getFirestore();
 	
 	//create new vehicle
-	public Vehicle createVehicle(Vehicle vehicle,String transporterId,MultipartFile file) throws IOException, InterruptedException, ExecutionException {
+	public Transporter createVehicle(Vehicle vehicle,String transporterId,MultipartFile file) throws IOException, InterruptedException, ExecutionException {
+		Firestore firestore = FirestoreClient.getFirestore();
 		String imgUrl = new FileUtility().uploadFile(file);
 		String vehicelId = firestore.collection("Transporter").document().getId();
 		vehicle.setVehicelId(vehicelId);
@@ -31,12 +30,13 @@ public class VehicleService {
 		vehicleList.add(vehicle);
 		transporter.setVehicleList(vehicleList);
 		firestore.collection("Transporter").document(transporterId).set(transporter);		
-		return vehicle;
+		return transporter;
 	}
 	
 	//delete vehicle
-	public Vehicle deleteVehicle(String vehicleId,String transporterId) throws InterruptedException, ExecutionException {
-			Transporter t = firestore.collection("Transporter").document(transporterId).get().get().toObject(Transporter.class);
+	public Transporter deleteVehicle(String vehicleId,String transporterId) throws InterruptedException, ExecutionException {
+		Firestore firestore = FirestoreClient.getFirestore();	
+		Transporter t = firestore.collection("Transporter").document(transporterId).get().get().toObject(Transporter.class);
 			ArrayList<Vehicle> vehicleList = t.getVehicleList();
 			Vehicle vehicle = null;
 			for(Vehicle v : vehicleList) {
@@ -44,7 +44,37 @@ public class VehicleService {
 					vehicle = v;
 					vehicleList.remove(v);
 			}
+			t.setVehicleList(vehicleList);
 			firestore.collection("Transporter").document(transporterId).set(t);
-			return vehicle;
+			return t;
+	}
+
+	public Transporter updateVehicle(Transporter transporter) throws InterruptedException, ExecutionException {
+		Firestore firestore = FirestoreClient.getFirestore();
+		firestore.collection("Transporter").document(transporter.getTransporterId()).set(transporter);
+		return transporter;
+	}
+
+	public Transporter updateImage(MultipartFile file, String transporterId, String id) throws IOException, InterruptedException, ExecutionException {
+		Firestore firestore = FirestoreClient.getFirestore();
+		String imgUrl = new FileUtility().uploadFile(file);
+		Transporter transporter=firestore.collection("Transporter").document(transporterId).get().get().toObject(Transporter.class);
+		ArrayList<Vehicle>al=transporter.getVehicleList();
+		int i=0;
+		for(i=0;i<al.size();i++) {
+			Vehicle v=al.get(i);
+			if(v.getVehicelId().equals(id)) {
+				v.setImgUrl(imgUrl);
+				al.set(i,v);
+				break;
+			}
+		}
+		if(i==al.size()) {
+			transporter=null;
+			return transporter;
+		}
+		transporter.setVehicleList(al);
+		firestore.collection("Transporter").document(transporter.getTransporterId()).set(transporter);
+		return transporter;
 	}
 }

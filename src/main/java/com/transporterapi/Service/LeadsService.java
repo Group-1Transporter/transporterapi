@@ -46,11 +46,10 @@ public class LeadsService {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("userId",id).get();
 		List<QueryDocumentSnapshot> documents;
-		
-			documents = future.get().getDocuments();
-			for (QueryDocumentSnapshot document : documents) {
+		documents = future.get().getDocuments();
+		for (QueryDocumentSnapshot document : documents) {
 				   al.add(document.toObject(Leads.class));
-				}
+		}
 				
 		return al;
 	}
@@ -127,9 +126,9 @@ public class LeadsService {
 			for (QueryDocumentSnapshot document : documents) {
 				   Bid bid=document.toObject(Bid.class);
 				   Leads lead=getLeadById(bid.getLeadId());
-				   if(!lead.getStatus().equalsIgnoreCase("completed"))
+				   if((!lead.getStatus().equalsIgnoreCase("completed")) && lead.getDealLockedWith().equals(id))
 					   al.add(new BidWithLead(bid,lead));
-				}
+			}
 		
 		return al;
 	}
@@ -138,19 +137,19 @@ public class LeadsService {
 		ArrayList<BidWithLead>al=new ArrayList<BidWithLead>();
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ApiFuture<QuerySnapshot> future=dbFirestore.collection("Bid").whereEqualTo("transporterId",id).get();
-		  List<QueryDocumentSnapshot>documents;
+		 List<QueryDocumentSnapshot>documents;
 		  documents = future.get().getDocuments();
 			for (QueryDocumentSnapshot document : documents) {
 				   Bid bid=document.toObject(Bid.class);
 				   Leads lead=getLeadById(bid.getLeadId());
-				   if(lead.getStatus().equalsIgnoreCase("completed"))
+				   if(lead.getStatus().equalsIgnoreCase("completed") && lead.getDealLockedWith().equals(id))
 					   al.add(new BidWithLead(bid,lead));
 				}
 		
 		return al;
 	}
 
-	public ArrayList<Leads> getAllLeads() throws InterruptedException, ExecutionException {
+	public ArrayList<Leads>getAllLeads() throws InterruptedException, ExecutionException {
 			ArrayList<Leads>al=new ArrayList<Leads>();
 			Firestore dbFirestore = FirestoreClient.getFirestore();
 			ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("status", "").get();
@@ -178,7 +177,7 @@ public class LeadsService {
 		return al;
 	}
 
-	public ArrayList<Leads> getCurrentLeadsbyFilter(String state) throws InterruptedException, ExecutionException{
+	public ArrayList<Leads> getCurrentLeadsbyFilter(ArrayList<String>al1) throws InterruptedException, ExecutionException{
 		ArrayList<Leads>al=new ArrayList<Leads>();
 		Firestore dbFirestore = FirestoreClient.getFirestore();
 		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("status", "").get();
@@ -187,7 +186,7 @@ public class LeadsService {
 			for (QueryDocumentSnapshot document : documents) {
 				Leads leads=document.toObject(Leads.class);
 				String []str=leads.getPickUpAddress().split(" ");
-				if(state.equalsIgnoreCase(str[str.length-1]));
+				if(al1.contains(str[str.length-1]))
 				   al.add(leads);
 				}					
 		return al;
@@ -233,3 +232,4 @@ public class LeadsService {
 	
 	
 }
+
