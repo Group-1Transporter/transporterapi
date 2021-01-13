@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.transporterapi.FileUtility;
+import com.transporterapi.bean.Rating;
 import com.transporterapi.bean.Transporter;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
@@ -73,5 +74,37 @@ public class TransporterService {
 		
 		
 	}
+	//create transporter rating
+	public Rating createRating(String transporterId,String leadId,Rating rating) throws InterruptedException, ExecutionException {
+		fireStore.collection("Rating").document(transporterId).collection("Rating").document(leadId).set(rating);
+		return rating; 
+	}
+	
+	// get single transporterId and rating
+	  public ArrayList<Rating> getTranporterRating(String transporterId) throws InterruptedException, ExecutionException{
+	   ArrayList<Rating> ratingList = new ArrayList<>();
+	   List<QueryDocumentSnapshot> document = fireStore.collection("Rating").document(transporterId).collection("Rating").get().get().getDocuments();
+		   for(QueryDocumentSnapshot ds : document) {
+			    Rating r = ds.toObject(Rating.class);
+			    ratingList.add(r);
+		   }
+		  return ratingList;
+	  }
+	  
+	 // get Number of Rating
+	  public ArrayList<Float> getNumberOfRating(String transporterId) throws InterruptedException, ExecutionException{
+		  ArrayList<Float> al = new ArrayList<>(); 
+		  List<QueryDocumentSnapshot> document = fireStore.collection("Rating").document(transporterId).collection("Rating").get().get().getDocuments();
+			al.add((float) document.size()); 
+			Float total = (float) 0;
+			for(QueryDocumentSnapshot ds : document) {
+				Rating rating = ds.toObject(Rating.class);
+				float r = Float.parseFloat(rating.getRating());
+				total += r;
+								
+			}
+		  al.add(total);
+		  return al;
+		  }
 	
 }
