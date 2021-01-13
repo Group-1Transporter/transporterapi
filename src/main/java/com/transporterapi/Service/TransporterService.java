@@ -76,6 +76,7 @@ public class TransporterService {
 	}
 	//create transporter rating
 	public Rating createRating(String transporterId,String leadId,Rating rating) throws InterruptedException, ExecutionException {
+		Firestore fireStore = FirestoreClient.getFirestore();
 		fireStore.collection("Rating").document(transporterId).collection("Rating").document(leadId).set(rating);
 		return rating; 
 	}
@@ -83,6 +84,7 @@ public class TransporterService {
 	// get single transporterId and rating
 	  public ArrayList<Rating> getTranporterRating(String transporterId) throws InterruptedException, ExecutionException{
 	   ArrayList<Rating> ratingList = new ArrayList<>();
+	   Firestore fireStore = FirestoreClient.getFirestore();
 	   List<QueryDocumentSnapshot> document = fireStore.collection("Rating").document(transporterId).collection("Rating").get().get().getDocuments();
 		   for(QueryDocumentSnapshot ds : document) {
 			    Rating r = ds.toObject(Rating.class);
@@ -94,6 +96,7 @@ public class TransporterService {
 	 // get Number of Rating
 	  public ArrayList<Float> getNumberOfRating(String transporterId) throws InterruptedException, ExecutionException{
 		  ArrayList<Float> al = new ArrayList<>(); 
+		  Firestore fireStore = FirestoreClient.getFirestore();
 		  List<QueryDocumentSnapshot> document = fireStore.collection("Rating").document(transporterId).collection("Rating").get().get().getDocuments();
 			al.add((float) document.size()); 
 			Float total = (float) 0;
