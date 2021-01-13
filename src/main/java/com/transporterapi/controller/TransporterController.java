@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.transporterapi.bean.Rating;
 import com.transporterapi.bean.Transporter;
 import com.transporterapi.exception.ResourceNotFoundException;
 import com.transporterapi.Service.TransporterService;
@@ -41,7 +42,6 @@ public class TransporterController {
 				@RequestParam("token")String token,
 				@RequestParam("aadharCardNumber")String aadharCardNumber,
 				@RequestParam("id")String id) throws ResourceNotFoundException, IOException {
-			
 			if(file.isEmpty())
 				throw new ResourceNotFoundException("image not found.");
 			Transporter transporter = new Transporter();
@@ -63,7 +63,7 @@ public class TransporterController {
 		@GetMapping("/")
 		public ResponseEntity<ArrayList<Transporter>> getTransporter() throws InterruptedException, ExecutionException{
 			return new ResponseEntity<ArrayList<Transporter>>(transporterService.getTransporter(),HttpStatus.OK);
-		}
+		}	
 		
 	//get Single Transporter by id
 		@GetMapping("/{id}")
@@ -100,5 +100,27 @@ public class TransporterController {
 					throw new ResourceNotFoundException("Transporter not found");					
 				return new ResponseEntity<Transporter>(t,HttpStatus.OK);
 			}
+			
+			//create Transporter Rating
+			@PostMapping("/rating/{transporterId}/{leadId}")
+			public ResponseEntity<Rating> createRating(@PathVariable String transporterId,@PathVariable String leadId,@RequestBody Rating rating) throws InterruptedException, ExecutionException, ResourceNotFoundException{
+				Rating r = transporterService.createRating(transporterId, leadId, rating);
+				if(r == null)
+					throw new ResourceNotFoundException("Rating not found");					
+				return new ResponseEntity<Rating>(r,HttpStatus.OK);
+			} 
+			//get Transporter Rating
+			   @GetMapping("/rating/{transporterId}")
+			   public ResponseEntity<ArrayList<Rating>> getTransporterRating(@PathVariable String transporterId) throws InterruptedException, ExecutionException{
+			    return new ResponseEntity<ArrayList<Rating>>(transporterService.getTranporterRating(transporterId),HttpStatus.OK);
+			   }
+			   
+			 //get Number of Ratings
+			   @GetMapping("/rating/number/{transporterId}")
+			   public ResponseEntity<ArrayList<Float>> getNumberOfRating(@PathVariable String transporterId) throws InterruptedException, ExecutionException{
+			    return new ResponseEntity<ArrayList<Float>>(transporterService.getNumberOfRating(transporterId),HttpStatus.OK);
+			   }
+			    
 		
+			
 }
