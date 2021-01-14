@@ -185,7 +185,8 @@ public class LeadsService {
 			documents = future.get().getDocuments();
 			for (QueryDocumentSnapshot document : documents) {
 				Leads leads=document.toObject(Leads.class);
-				String []str=leads.getPickUpAddress().split(" ");
+				String []str=leads.getPickUpAddress().split(",");
+				System.out.println(""+leads.getPickUpAddress());
 				if(al1.contains(str[str.length-1]))
 				   al.add(leads);
 				}					
