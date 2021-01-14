@@ -3,6 +3,7 @@ package com.transporterapi.bean;
 public class Rating {
 	private String rating;
 	private String feedback;
+	private String userName,imageUrl,userId;
 	public String getRating() {
 		return rating;
 	}
@@ -15,11 +16,23 @@ public class Rating {
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;
 	}
-	public Rating(String rating, String feedback) {
-		super();
-		this.rating = rating;
-		this.feedback = feedback;
+	public String getUserName() {
+		return userName;
 	}
-	public Rating() {}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 	
 }
