@@ -4,6 +4,7 @@ public class Leads {
 	private String userId,leadId,typeOfMaterial,weight,pickUpAddress,
 		deliveryAddress,contactForPickup,contactForDelivery,dateOfCompletion,amount,
 		timestamp,status,vehicleNumber,dealLockedWith,bidCount,transporterName="",km;
+	private boolean active=true;
 	public String getKm() {
 		return km;
 	}
@@ -21,7 +22,7 @@ public class Leads {
 	}
 	public Leads(String userId, String leadId, String typeOfMaterial, String weight, String pickUpAddress,
 			String deliveryAddress, String contactForPickup, String contactForDelivery, String dateOfCompletion,
-			String timestamp, String status, String vehicleNumber, String dealLockedWith, String bidCount,String transporterName,String amount,String km) {
+			String timestamp, String status, String vehicleNumber, String dealLockedWith, String bidCount,String transporterName,String amount,String km,boolean active) {
 		super();
 		this.userId = userId;
 		this.leadId = leadId;
@@ -40,8 +41,15 @@ public class Leads {
 		this.transporterName = transporterName;
 		this.amount = amount;
 		this.km = km;
-		
+		this.active=active;
 	
+	}
+	
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	public String getTransporterName() {
 		return transporterName;
