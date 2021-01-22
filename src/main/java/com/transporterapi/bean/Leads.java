@@ -1,10 +1,14 @@
 package com.transporterapi.bean;
 
+import java.util.ArrayList;
+
+
 public class Leads {
 	private String userId,leadId,typeOfMaterial,weight,pickUpAddress,
 		deliveryAddress,contactForPickup,contactForDelivery,dateOfCompletion,amount,
 		timestamp,status,vehicleNumber,dealLockedWith,bidCount,transporterName="",km;
 	private boolean rating = false;
+	private ArrayList<SpecialRequirnment> specialRequirnmentlist;
 	public String getKm() {
 		return km;
 	}

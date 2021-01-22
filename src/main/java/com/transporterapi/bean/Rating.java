@@ -1,12 +1,11 @@
 package com.transporterapi.bean;
-import java.util.ArrayList;
+
 
 public class Rating {
 	private String rating;
 	private String feedback;
 	private String userName,imageUrl,userId;
 	private long timestamp;
-	private ArrayList<SpecialRequirnment> specialRequirnmentlist;
 	public long getTimestamp() {
 		return timestamp;
 	}
