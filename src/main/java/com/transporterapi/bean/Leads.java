@@ -4,6 +4,7 @@ public class Leads {
 	private String userId,leadId,typeOfMaterial,weight,pickUpAddress,
 		deliveryAddress,contactForPickup,contactForDelivery,dateOfCompletion,amount,
 		timestamp,status,vehicleNumber,dealLockedWith,bidCount,transporterName="",km;
+	private boolean rating = false;
 	public String getKm() {
 		return km;
 	}
@@ -18,6 +19,12 @@ public class Leads {
 	}
 	public void setAmount(String amount) {
 		this.amount = amount;
+	}
+	public boolean isRating() {
+		return rating;
+	}
+	public void setRating(boolean rating) {
+		this.rating = rating;
 	}
 	public Leads(String userId, String leadId, String typeOfMaterial, String weight, String pickUpAddress,
 			String deliveryAddress, String contactForPickup, String contactForDelivery, String dateOfCompletion,
