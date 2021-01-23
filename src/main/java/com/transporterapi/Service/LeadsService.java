@@ -67,8 +67,10 @@ public class LeadsService {
 			documents = future.get().getDocuments();
 			for (QueryDocumentSnapshot document : documents) {
 				   Leads lead=document.toObject(Leads.class);
+				   if(!lead.getStatus().equals("")) {
 				   if(!lead.getStatus().equalsIgnoreCase("Completed")) {
 					   al.add(lead);
+				   }
 				   }
 				}
 		 		
@@ -90,6 +92,23 @@ public class LeadsService {
 				
 		return al;
 	}
+	
+	//where equal to method update
+	public ArrayList<Leads> getCreatedLeads(String id) throws InterruptedException, ExecutionException{
+		ArrayList<Leads>al=new ArrayList<Leads>();
+		Firestore dbFirestore = FirestoreClient.getFirestore();
+		ApiFuture<QuerySnapshot> future =dbFirestore.collection(COL_NAME).whereEqualTo("userId",id).whereEqualTo("status", "").get();
+		List<QueryDocumentSnapshot> documents;
+		
+			documents = future.get().getDocuments();
+			for (QueryDocumentSnapshot document : documents) {
+				   Leads lead=document.toObject(Leads.class);
+				   al.add(lead);
+				}
+				
+		return al;
+	}
+	
 	
 	public Leads deleteLeadById(String id)throws InterruptedException, ExecutionException {
 		Firestore dbFirestore = FirestoreClient.getFirestore();
@@ -166,12 +185,51 @@ public class LeadsService {
 			documents = future.get().getDocuments();
 			for (QueryDocumentSnapshot document : documents) {
 				Leads leads=document.toObject(Leads.class);
-				String []str=leads.getPickUpAddress().split(" ");
+				String []str=leads.getPickUpAddress().split(",");
+				System.out.println(""+leads.getPickUpAddress());
 				if(al1.contains(str[str.length-1]))
 				   al.add(leads);
 				}					
 		return al;
 	}
+	
+	
+	//get Create or Confirmed Loads
+	public ArrayList<Leads> getCreateAndConfirmed(String userId) throws InterruptedException, ExecutionException{
+		ArrayList<Leads>al=new ArrayList<Leads>();
+		Firestore dbFirestore = FirestoreClient.getFirestore();
+		
+		List<QueryDocumentSnapshot> documents =dbFirestore.collection(COL_NAME).whereEqualTo("userId", userId).whereEqualTo("status", "").get().get().getDocuments();
+		for (QueryDocumentSnapshot document : documents) {
+			Leads leads=document.toObject(Leads.class);			
+			al.add(leads);
+		}
+		List<QueryDocumentSnapshot> cDocuments =dbFirestore.collection(COL_NAME).whereEqualTo("status", "confirmed").whereEqualTo("userId", userId).get().get().getDocuments();
+		for (QueryDocumentSnapshot document : cDocuments) {
+			Leads leads=document.toObject(Leads.class);			
+			al.add(leads);
+		}
+		List<QueryDocumentSnapshot> coDocuments =dbFirestore.collection(COL_NAME).whereEqualTo("status", "loaded").whereEqualTo("userId", userId).get().get().getDocuments();
+		for (QueryDocumentSnapshot document : coDocuments) {
+			Leads leads=document.toObject(Leads.class);		
+			al.add(leads);
+			
+		}
+		List<QueryDocumentSnapshot> conDocuments =dbFirestore.collection(COL_NAME).whereEqualTo("userId", userId).whereEqualTo("status", "in transist").get().get().getDocuments();
+		for (QueryDocumentSnapshot document : conDocuments) {
+			Leads leads=document.toObject(Leads.class);			
+			al.add(leads);
+		}
+		List<QueryDocumentSnapshot> confDocuments =dbFirestore.collection(COL_NAME).whereEqualTo("userId", userId).whereEqualTo("status", "reached").get().get().getDocuments();
+		for (QueryDocumentSnapshot document : confDocuments) {
+			Leads leads=document.toObject(Leads.class);			
+			al.add(leads);
+		}
+		return al;
+		
+		
+	}
+	
 	
 	
 }

@@ -30,14 +30,12 @@ public class LeadsController {
 	
 	@PostMapping("/create")
 	public ResponseEntity<Leads> createLeads(@RequestBody Leads leads) {
-		Firestore dbFirestore = FirestoreClient.getFirestore();
 		leads=leadsService.createLeads(leads);
 		return new ResponseEntity<Leads>(leads,HttpStatus.OK);
 	}
 	
 	@PostMapping("/update")
 	public ResponseEntity<Leads> updateLeads(@RequestBody Leads leads) {
-		Firestore dbFirestore = FirestoreClient.getFirestore();
 		leads=leadsService.updateLeads(leads);
 		return new ResponseEntity<Leads>(leads,HttpStatus.OK);
 	}
@@ -69,6 +67,13 @@ public class LeadsController {
 		return new ResponseEntity<ArrayList<Leads>>(al,HttpStatus.OK);
 	}
 	
+	//create leads
+	@GetMapping("/created-lead/{userId}")
+	public ResponseEntity<ArrayList<Leads>> getCreatedLeads(@PathVariable("userId") String id) throws InterruptedException, ExecutionException{
+		ArrayList<Leads>al=leadsService.getCreatedLeads(id);
+		return new ResponseEntity<ArrayList<Leads>>(al,HttpStatus.OK);
+	}
+	
 	@DeleteMapping("/{leadId}")
 	public ResponseEntity<Leads> deleteLeadById(@PathVariable("leadId") String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
 		Leads lead= leadsService.deleteLeadById(id);
@@ -87,6 +92,8 @@ public class LeadsController {
 		ArrayList<BidWithLead>al=leadsService.getCompletedLeadsbyTransporterId(id);
 		return new ResponseEntity<ArrayList<BidWithLead>>(al,HttpStatus.OK);
 	}
+	
+	
 	@GetMapping("/all-lead")
 	public ResponseEntity<ArrayList<Leads>> getAllLeads() throws InterruptedException, ExecutionException{
 		ArrayList<Leads>al=leadsService.getAllLeads();
@@ -102,5 +109,14 @@ public class LeadsController {
 		ArrayList<Leads>al=leadsService.getCurrentLeadsbyFilter(al1);
 		return new ResponseEntity<ArrayList<Leads>>(al,HttpStatus.OK);
 	}
+	
+	//get Create or Confirmed Load Only
+	@GetMapping("/create/confirmed/{userId}")
+	public ResponseEntity<ArrayList<Leads>> getCreateAndConfirmed(@PathVariable("userId")String userId) throws InterruptedException, ExecutionException {
+		ArrayList<Leads>al=leadsService.getCreateAndConfirmed(userId);
+		return new ResponseEntity<ArrayList<Leads>>(al,HttpStatus.OK);
+	}
+	
+	
 	
 }

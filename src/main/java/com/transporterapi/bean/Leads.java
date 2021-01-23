@@ -2,14 +2,27 @@ package com.transporterapi.bean;
 
 public class Leads {
 	private String userId,leadId,typeOfMaterial,weight,pickUpAddress,
-		deliveryAddress,contactForPickup,contactForDelivery,dateOfCompletion,
-		timestamp,status,vehicleNumber,dealLockedWith,bidCount;
+		deliveryAddress,contactForPickup,contactForDelivery,dateOfCompletion,amount,
+		timestamp,status,vehicleNumber,dealLockedWith,bidCount,transporterName="",km;
+	private boolean active=true;
+	public String getKm() {
+		return km;
+	}
+	public void setKm(String km) {
+		this.km = km;
+	}
 	public Leads() {
 		
 	}
+	public String getAmount() {
+		return amount;
+	}
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
 	public Leads(String userId, String leadId, String typeOfMaterial, String weight, String pickUpAddress,
 			String deliveryAddress, String contactForPickup, String contactForDelivery, String dateOfCompletion,
-			String timestamp, String status, String vehicleNumber, String dealLockedWith, String bidCount) {
+			String timestamp, String status, String vehicleNumber, String dealLockedWith, String bidCount,String transporterName,String amount,String km,boolean active) {
 		super();
 		this.userId = userId;
 		this.leadId = leadId;
@@ -25,6 +38,24 @@ public class Leads {
 		this.vehicleNumber = vehicleNumber;
 		this.dealLockedWith = dealLockedWith;
 		this.bidCount = bidCount;
+		this.transporterName = transporterName;
+		this.amount = amount;
+		this.km = km;
+		this.active=active;
+	
+	}
+	
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	public String getTransporterName() {
+		return transporterName;
+	}
+	public void setTransporterName(String transporterName) {
+		this.transporterName = transporterName;
 	}
 	public String getUserId() {
 		return userId;
@@ -110,5 +141,6 @@ public class Leads {
 	public void setBidCount(String bidCount) {
 		this.bidCount = bidCount;
 	}
+	
 	
 }

@@ -35,14 +35,14 @@ public class UserController {
 		return new ResponseEntity<User>(user,HttpStatus.OK);
 	}
 	@PostMapping("/image")
-	public ResponseEntity<User> updateimage(@RequestParam("file")MultipartFile file,@RequestParam("transporterId")String id) throws ResourceNotFoundException, IOException, InterruptedException, ExecutionException{
+	public ResponseEntity<User> updateimage(@RequestParam("file")MultipartFile file,@RequestParam("userId")String userId) throws ResourceNotFoundException, IOException, InterruptedException, ExecutionException{
 		if(file.isEmpty())
 			throw new ResourceNotFoundException("file not found");
-		User user=userService.updateImage(file,id);
+		User user=userService.updateImage(file,userId);
 		if(user!=null)
 			return new ResponseEntity<User>(user,HttpStatus.OK);
 		else
-			throw new ResourceNotFoundException("user not found with this id "+id);
+			throw new ResourceNotFoundException("user not found with this id "+userId);
 	}
 	@GetMapping("/{id}")
 	public ResponseEntity<User> getUserById(@PathVariable("id") String id)throws ResourceNotFoundException, InterruptedException, ExecutionException {
@@ -52,13 +52,16 @@ public class UserController {
 		else
 			throw new ResourceNotFoundException("user not found with this id "+id);
 	}
+	//Take User Id
 	@PostMapping("/")
-	public ResponseEntity<User> createNewUser(@RequestParam("file") MultipartFile file ,@RequestParam("name")String name,
+	public ResponseEntity<User> createNewUser(@RequestParam("file") MultipartFile file ,
+			@RequestParam("userId") String userId,
+			@RequestParam("name")String name,
 			@RequestParam("address")String address,
 			@RequestParam("contactNumber")String contactNumber,@RequestParam("token")String token)throws ResourceNotFoundException, IOException {
 		if(file.isEmpty())
 			throw new ResourceNotFoundException("image not found.");
-		 User user=userService.createUser(new User("",name,address,contactNumber,"",token),file);
+		 User user=userService.createUser(new User(userId,name,address,contactNumber,"",token),file);
 		 return new ResponseEntity<User>(user,HttpStatus.OK);
 	}
 	

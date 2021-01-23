@@ -18,7 +18,7 @@ import com.google.cloud.storage.StorageOptions;
 
 public class FileUtility {
 	public String uploadFile(MultipartFile file) throws IOException {
-		InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("./serviceAccountKey.json");
+		InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("serviceAccountKey.json");
 		Storage storage = StorageOptions.newBuilder().setProjectId("transporter-vendor")
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount)).build().getService();
 		HashMap<String, String> hm = new HashMap<>();
