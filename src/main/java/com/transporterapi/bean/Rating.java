@@ -1,9 +1,17 @@
 package com.transporterapi.bean;
 
+
 public class Rating {
 	private String rating;
 	private String feedback;
 	private String userName,imageUrl,userId;
+	private long timestamp;
+	public long getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
 	public String getRating() {
 		return rating;
 	}
