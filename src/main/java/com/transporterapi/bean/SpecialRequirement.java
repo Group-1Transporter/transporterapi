@@ -1,12 +1,12 @@
 package com.transporterapi.bean;
 
-public class SpecialRequirnment {
+public class SpecialRequirement {
 	private String additionalMaterialType;
 	private String pickupStreet;
 	private String deliverystreet;
 	private String remark;
 	private boolean handelWithCare = false;
-	public SpecialRequirnment(String additionalMaterialType, String pickupStreet, String deliverystreet, String remark,
+	public SpecialRequirement(String additionalMaterialType, String pickupStreet, String deliverystreet, String remark,
 			boolean handelWithCare) {
 		super();
 		this.additionalMaterialType = additionalMaterialType;
@@ -15,6 +15,11 @@ public class SpecialRequirnment {
 		this.remark = remark;
 		this.handelWithCare = handelWithCare;
 	}
+	
+	public SpecialRequirement() {
+		super();
+	}
+
 	public String getAdditionalMaterialType() {
 		return additionalMaterialType;
 	}
