@@ -70,9 +70,7 @@ public class TransporterService {
 		Transporter t = fireStore.collection(TAG).document(transporterId).get().get().toObject(Transporter.class);
 		t.setImageUrl(imageUrl);
 		fireStore.collection(TAG).document(transporterId).set(t);
-		return t;
-		
-		
+		return t;			
 	}
 	//create transporter rating
 	public Rating createRating(String transporterId,String leadId,Rating rating) throws InterruptedException, ExecutionException {
@@ -108,6 +106,5 @@ public class TransporterService {
 			}
 		  al.add(total);
 		  return al;
-		  }
-	
+		  }	
 }

@@ -27,6 +27,5 @@ public class FirbaseIntialize {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

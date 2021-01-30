@@ -2,12 +2,14 @@ package com.transporterapi.controller;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,11 +46,17 @@ public class VehicleController {
 	@PostMapping("/update")
 	public ResponseEntity<Transporter> updateVehicle(@RequestBody Transporter transporter) throws InterruptedException, ExecutionException{
 		transporter=vehicleService.updateVehicle(transporter);
-	
 		return new ResponseEntity<Transporter>(transporter,HttpStatus.OK);
 	}
 	
-	
+	@GetMapping("/category")
+	public ResponseEntity<ArrayList<Object>> getCategory() throws InterruptedException, ExecutionException, ResourceNotFoundException{
+		ArrayList<Object> al=vehicleService.getCategory();
+		if(al.size()==0) {
+			throw new ResourceNotFoundException("No Category Found");
+		}
+		return new ResponseEntity<ArrayList<Object>>(al,HttpStatus.OK);
+	}
 	
 	
 	@PostMapping("/update/image")
