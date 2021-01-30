@@ -1,10 +1,22 @@
 package com.transporterapi.bean;
 
+import java.util.ArrayList;
+
+
 public class Leads {
 	private String userId,leadId,typeOfMaterial,weight,pickUpAddress,
 		deliveryAddress,contactForPickup,contactForDelivery,dateOfCompletion,amount,
 		timestamp,status,vehicleNumber,dealLockedWith,bidCount,transporterName="",km;
+
 	private boolean active=true;
+
+	private boolean rating = false;
+	private boolean special=false;
+	private SpecialRequirement specialRequirement;
+	public Leads(boolean special) {
+		super();
+		this.special = special;
+	}
 	public String getKm() {
 		return km;
 	}
@@ -20,9 +32,21 @@ public class Leads {
 	public void setAmount(String amount) {
 		this.amount = amount;
 	}
+	public boolean isRating() {
+		return rating;
+	}
+	public void setRating(boolean rating) {
+		this.rating = rating;
+	}
+	public boolean isSpecial() {
+		return special;
+	}
+	public void setSpecial(boolean special) {
+		this.special = special;
+	}
 	public Leads(String userId, String leadId, String typeOfMaterial, String weight, String pickUpAddress,
 			String deliveryAddress, String contactForPickup, String contactForDelivery, String dateOfCompletion,
-			String timestamp, String status, String vehicleNumber, String dealLockedWith, String bidCount,String transporterName,String amount,String km,boolean active) {
+			String timestamp, String status, String vehicleNumber, String dealLockedWith, SpecialRequirement specialRequirement ,String bidCount,String transporterName,String amount,String km,boolean active) {
 		super();
 		this.userId = userId;
 		this.leadId = leadId;
@@ -42,8 +66,8 @@ public class Leads {
 		this.amount = amount;
 		this.km = km;
 		this.active=active;
-	
-	}
+		this.specialRequirement=specialRequirement;
+  }
 	
 	public boolean isActive() {
 		return active;
@@ -140,6 +164,12 @@ public class Leads {
 	}
 	public void setBidCount(String bidCount) {
 		this.bidCount = bidCount;
+	}
+	public SpecialRequirement getSpecialRequirement() {
+		return specialRequirement;
+	}
+	public void setSpecialRequirement(SpecialRequirement specialRequirement) {
+		this.specialRequirement = specialRequirement;
 	}
 	
 	
